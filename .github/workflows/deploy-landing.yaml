@@ -1,0 +1,73 @@
+name: "[landing] Build and deploy"
+
+# Builds the landing page, and on `main` publishes it to Cloudflare Pages.
+#
+# Needs two repository secrets, from the Cloudflare dashboard:
+#   CF_ACCOUNT_ID  the account the Pages project lives in
+#   CF_API_TOKEN   a token with the "Cloudflare Pages: Edit" permission
+# The Pages project itself (`epaper-studio`) has to exist before the first
+# deploy; wrangler does not create one.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "apps/landing/**"
+      - ".github/workflows/deploy-landing.yaml"
+      - "pnpm-lock.yaml"
+  pull_request:
+    paths:
+      - "apps/landing/**"
+      - ".github/workflows/deploy-landing.yaml"
+      - "pnpm-lock.yaml"
+
+concurrency:
+  group: landing-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  deploy:
+    name: "Build and deploy"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      # Scoped to the site: the desktop app's toolchain is not needed here.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --filter @epaper-studio/landing...
+
+      - name: Typecheck
+        run: pnpm --filter @epaper-studio/landing check-types
+
+      - name: Build
+        run: pnpm --filter @epaper-studio/landing build
+
+      # A pull request stops here: the build above is the check, and a preview
+      # deploy would need the secrets, which a fork's pull request cannot read.
+      - name: Publish to Cloudflare Pages
+        if: github.event_name != 'pull_request'
+        working-directory: apps/landing
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
+        run: pnpm exec wrangler pages deploy dist --project-name=epaper-studio --branch=main

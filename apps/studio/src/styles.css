@@ -1,0 +1,191 @@
+/*
+ * Import order is the one cascivo requires: components, then tokens + themes,
+ * then anything this app adds on top.
+ */
+@import '@cascivo/react/styles.css';
+@import '@cascivo/themes/all.css';
+
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/800.css';
+
+/*
+ * Inter is bundled rather than pulled from the system so that a calendar page
+ * rendered on Windows, macOS and Linux comes out pixel-identical. It is the
+ * page's font, not the app's — the app's comes from the theme.
+ */
+
+/*
+ * This app's own slot in the cascade. Declaring it here fixes its priority
+ * relative to everything cascivo ships; `cascivo.override` stays free for the
+ * hotfixes it is meant for.
+ */
+@layer vendor,
+	cascivo.reset,
+	cascivo.base,
+	cascivo.tokens,
+	cascivo.component,
+	cascivo.platform,
+	cascivo.theme,
+	cascivo.blocks,
+	cascivo.epaper,
+	cascivo.override;
+
+@layer cascivo.epaper {
+	html,
+	body,
+	#root {
+		block-size: 100%;
+	}
+
+	body {
+		margin: 0;
+		/* A desktop app should not feel like a web page. */
+		user-select: none;
+		cursor: default;
+		overflow: hidden;
+	}
+
+	input,
+	textarea {
+		user-select: text;
+	}
+
+	/* Content beside a preview that stays put while the page scrolls. */
+	.epaper-workspace {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) auto;
+		align-items: start;
+		gap: var(--cascivo-space-6);
+	}
+
+	.epaper-panel {
+		min-inline-size: 0;
+		max-inline-size: 42rem;
+	}
+
+	.epaper-preview {
+		position: sticky;
+		inset-block-start: 0;
+		inline-size: 23rem;
+	}
+
+	/* The canvas is the physical panel, so it gets the frame a photo would. */
+	.epaper-canvas {
+		display: block;
+		border: var(--cascivo-border-width-2, 2px) solid var(--cascivo-color-border);
+		background: #fff;
+	}
+
+	/* The seven colours the display can show; not a themeable surface. */
+	.epaper-swatch {
+		inline-size: 2.25rem;
+		block-size: 2.25rem;
+		padding: 0;
+		border: var(--cascivo-border-width-2, 2px) solid var(--cascivo-color-border);
+		border-radius: var(--cascivo-radius-sm);
+		cursor: pointer;
+	}
+
+	.epaper-swatch[aria-pressed='true'] {
+		outline: var(--cascivo-border-width-2, 2px) solid var(--cascivo-color-accent);
+		outline-offset: 2px;
+	}
+
+	.epaper-photo-frame {
+		display: grid;
+		place-items: center;
+		overflow: hidden;
+		border: var(--cascivo-border-width-2, 2px) solid var(--cascivo-color-border);
+		background: var(--cascivo-color-surface-2);
+	}
+
+	.epaper-photo-frame img {
+		inline-size: 100%;
+		block-size: 100%;
+		object-fit: contain;
+	}
+
+	/* A photo row is a button-ish surface, so selection has to read at a glance. */
+	.epaper-row {
+		display: grid;
+		align-items: center;
+		gap: var(--cascivo-space-2);
+		padding-block: var(--cascivo-space-2);
+		padding-inline: var(--cascivo-space-3);
+		border-block-end: 1px solid var(--cascivo-color-border);
+	}
+
+	.epaper-row:last-child {
+		border-block-end: none;
+	}
+
+	.epaper-row[data-selected='true'] {
+		background: var(--cascivo-color-accent-subtle, var(--cascivo-color-surface-2));
+	}
+
+	.epaper-row--photo {
+		grid-template-columns: minmax(0, 1fr) auto auto;
+	}
+
+	/*
+	 * Selecting a photo is the row's own action, but the row also holds the
+	 * reorder and delete buttons — so the control is the label area, not the
+	 * whole row. Nesting those buttons inside a clickable row would hide them
+	 * from a screen reader and leave the selection mouse-only.
+	 */
+	.epaper-row-select {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr);
+		align-items: center;
+		gap: var(--cascivo-space-2);
+		min-inline-size: 0;
+		padding: 0;
+		border: none;
+		background: none;
+		color: inherit;
+		font: inherit;
+		text-align: start;
+		cursor: pointer;
+	}
+
+	.epaper-row--birthday {
+		grid-template-columns: minmax(0, 1fr) auto auto auto;
+	}
+
+	.epaper-row--event {
+		grid-template-columns: minmax(0, 1fr) auto auto auto auto;
+	}
+
+	.epaper-row--chore {
+		grid-template-columns: minmax(0, 1fr) auto auto auto;
+	}
+
+	.epaper-list {
+		border: 1px solid var(--cascivo-color-border);
+		border-radius: var(--cascivo-radius-sm);
+		overflow: hidden;
+	}
+
+	.epaper-mono {
+		font-family: var(--cascivo-font-mono);
+		font-size: var(--cascivo-font-size-xs);
+		color: var(--cascivo-color-text-muted);
+	}
+
+	.epaper-eyebrow {
+		font-family: var(--cascivo-font-mono);
+		font-size: var(--cascivo-font-size-xs);
+		text-transform: uppercase;
+		letter-spacing: 0.14em;
+		color: var(--cascivo-color-text-muted);
+	}
+
+	.epaper-truncate {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+}

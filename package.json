@@ -1,0 +1,25 @@
+{
+	"name": "epaper-studio",
+	"version": "0.0.0",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "turbo run build",
+		"dev": "turbo run dev --parallel",
+		"test": "turbo run test",
+		"check-types": "turbo run check-types",
+		"lint": "biome check .",
+		"format": "biome check --write .",
+		"studio": "pnpm --filter @epaper-studio/studio app:dev",
+		"landing": "pnpm --filter @epaper-studio/landing dev"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "2.5.14",
+		"turbo": "2.11.2"
+	},
+	"engines": {
+		"node": ">=22.0.0",
+		"pnpm": ">=12.0.0"
+	},
+	"packageManager": "pnpm@12.5.1"
+}

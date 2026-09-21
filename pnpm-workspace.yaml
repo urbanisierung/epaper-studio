@@ -1,0 +1,17 @@
+packages:
+  - apps/*
+  - packages/*
+
+# pnpm refuses to run a dependency's install scripts unless it is listed here,
+# and fails the install rather than skipping it silently.
+allowBuilds:
+  esbuild: true
+  workerd: true
+
+# pnpm refuses a package published less than a day ago, so a compromised
+# release has time to be noticed before it reaches a build. That is the right
+# default for everything here except the cascivo packages, which are this
+# repository owner's own: bumping to a version published the same day is
+# routine, and under the default it would fail every build for 24 hours.
+minimumReleaseAgeExclude:
+  - '@cascivo/*'

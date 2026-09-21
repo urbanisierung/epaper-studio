@@ -1,0 +1,18 @@
+/*
+ * The cascade layer order, declared before any cascivo CSS is imported: layers
+ * take their position from first appearance, so a statement that lands after
+ * the theme cannot reorder anything.
+ *
+ * `cascivo.landing` is this site's own slot. It sits above cascivo's own
+ * layers so the handful of rules here win, and below `cascivo.override`, which
+ * stays free as the last-resort escape hatch.
+ */
+@layer cascivo.reset,
+	cascivo.base,
+	cascivo.tokens,
+	cascivo.component,
+	cascivo.platform,
+	cascivo.theme,
+	cascivo.blocks,
+	cascivo.landing,
+	cascivo.override;

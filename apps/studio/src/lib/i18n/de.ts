@@ -1,0 +1,248 @@
+import type { MessageKey } from './en'
+
+/**
+ * German catalogue. Typed as a complete map of `MessageKey`, so every string
+ * added to `en.ts` has to be translated here before the app compiles.
+ */
+export const de: Record<MessageKey, string> = {
+	'app.name': 'E-Paper Studio',
+	'app.loading': 'Lädt…',
+	'app.language': 'Sprache der App',
+	'app.theme': 'Darstellung',
+	'theme.system': 'Wie das System',
+	'app.builtBy': 'Gebaut von',
+	'app.authorTitle': '{name} im Browser öffnen',
+
+	'nav.setup': 'Einrichten',
+	'nav.birthdays': 'Geburtstage',
+	'nav.events': 'Urlaube',
+	'nav.photos': 'Fotos',
+	'nav.chores': 'Aufgaben',
+
+	'chores.eyebrow': 'Aufgaben',
+	'chores.add.title': 'Aufgabe hinzufügen',
+	'chores.add.description':
+		'Der erste Tag legt beides fest: den Rhythmus und die Reihenfolge — eine wöchentliche Aufgabe, die an einem Dienstag beginnt, ist jeden Dienstag fällig, und die erste genannte Person übernimmt diesen ersten Durchgang.',
+	'chores.namePlaceholder': 'Müll rausbringen',
+	'chores.people': 'Wer sich abwechselt',
+	'chores.people.placeholder': 'Namen eingeben und Enter drücken',
+	'chores.people.hint':
+		'In der Reihenfolge des Wechsels. Leer lassen, wenn niemand fest zuständig ist.',
+	'chores.frequency': 'Wie oft',
+	'chores.firstDay': 'Erstes Mal',
+	'chores.list.title': 'Aufgaben ({count})',
+	'chores.list.description':
+		'Jede Seite zeigt die an diesem Tag fälligen Aufgaben und wer dran ist.',
+	'chores.empty':
+		'Noch keine Aufgaben. Oben eine anlegen, dann steht auf den Seiten, wer was macht.',
+	'chores.nobody': 'niemand zugeteilt',
+	'chores.nextTurn': 'Nächstes Mal: {date} · {person}',
+	'chores.nextTurnUnassigned': 'Nächstes Mal: {date}',
+	'chores.noneDue': 'Im nächsten Jahr nicht fällig.',
+	'chores.maxOnPage': 'Aufgaben pro Seite',
+	'chores.maxOnPage.hint': 'Null lässt Aufgaben ganz von den Seiten weg.',
+
+	'frequency.daily': 'Täglich',
+	'frequency.weekly': 'Wöchentlich',
+	'frequency.fortnightly': 'Alle zwei Wochen',
+	'frequency.monthly': 'Monatlich',
+
+	'io.export.choresCsv': 'Aufgaben · CSV',
+	'io.export.choresJson': 'Aufgaben · JSON',
+	'io.summary.chores_one': '{count} Aufgabe',
+	'io.summary.chores_other': '{count} Aufgaben',
+	'nav.export': 'Export',
+	'nav.device': 'Display',
+
+	'project.open': 'Öffnen',
+	'project.openTitle': 'Ein gespeichertes Projekt öffnen',
+	'project.openDialog': 'Projekt öffnen',
+	'project.save': 'Sichern',
+	'project.saveTitle': 'Eine Kopie dieses Projekts sichern',
+	'project.saveDialog': 'Projekt sichern',
+	'project.fileType': 'E-Paper-Studio-Projekt',
+
+	'action.add': 'Hinzufügen',
+	'action.remove': 'Entfernen',
+	'action.cancel': 'Abbrechen',
+	'action.search': 'Suchen…',
+	'action.moveUp': 'Nach oben',
+	'action.moveDown': 'Nach unten',
+
+	'field.name': 'Name',
+
+	'setup.eyebrow': 'Einrichten',
+	'setup.display.title': 'Display',
+	'setup.display.description':
+		'Das vorhandene Panel auswählen. Alles auf der Seite wird aus diesen Maßen berechnet, das Layout passt sich also an.',
+	'setup.width': 'Breite (px)',
+	'setup.height': 'Höhe (px)',
+
+	'setup.range.title': 'Zeitraum',
+	'setup.range.description': 'Eine Seite pro Tag, beginnend am gewählten Tag.',
+	'setup.firstDay': 'Erster Tag',
+	'setup.days': 'Anzahl Tage',
+	'setup.pages_one': '{count} Seite wird geschrieben',
+	'setup.pages_other': '{count} Seiten werden geschrieben',
+	'setup.collapse.label': 'Urlaub oder Reise auf eine Seite legen',
+	'setup.collapse.hint': 'Eine neuntägige Reise erscheint einmal statt auf neun Seiten.',
+
+	'setup.language.title': 'Sprache des Kalenders',
+	'setup.language.description':
+		'Wochentage, Monatsnamen und der Countdown auf den gedruckten Seiten. Die Sprache der App selbst wird oben in der Leiste eingestellt.',
+	'setup.locale': 'Sprache',
+	'setup.weekStart': 'Woche beginnt am',
+	'setup.weekStart.monday': 'Montag',
+	'setup.weekStart.sunday': 'Sonntag',
+
+	'setup.appearance.title': 'Darstellung',
+	'setup.appearance.description':
+		'Das Panel kann nur sieben Farben zeigen, die Akzentfarbe stammt deshalb aus diesen.',
+	'setup.accent': 'Akzentfarbe',
+	'setup.font': 'Schrift',
+	'setup.font.bundled': '{name} (mitgeliefert)',
+	'setup.maxEvents': 'Einträge pro Seite',
+	'setup.lookahead': 'Vorschau (Tage)',
+	'setup.lookahead.hint': 'Wie weit im Voraus anstehende Geburtstage aufgelistet werden.',
+	'setup.showAges': 'Alter anzeigen',
+
+	'color.red': 'Rot',
+	'color.orange': 'Orange',
+	'color.green': 'Grün',
+	'color.blue': 'Blau',
+	'color.black': 'Schwarz',
+
+	'birthdays.eyebrow': 'Geburtstage',
+	'birthdays.add.title': 'Geburtstag hinzufügen',
+	'birthdays.add.description': 'Das Geburtsjahr sorgt dafür, dass unter dem Namen ein Alter steht.',
+	'birthdays.namePlaceholder': 'Alex',
+	'birthdays.dateOfBirth': 'Geburtsdatum',
+	'birthdays.list.title': 'Geburtstage ({count})',
+	'birthdays.list.description': 'Sortiert nach dem, was als Nächstes ansteht.',
+	'birthdays.empty':
+		'Noch keine Geburtstage. Oben einen anlegen oder eine vorhandene Datei importieren.',
+
+	'events.eyebrow': 'Urlaube',
+	'events.add.title': 'Urlaub oder Reise hinzufügen',
+	'events.add.description':
+		'Die Seiten zählen darauf herunter. Alles, was länger als einen Tag dauert, bekommt eine Seite statt einer pro Tag.',
+	'events.namePlaceholder': 'Kreta',
+	'events.firstDay': 'Erster Tag',
+	'events.days': 'Tage',
+	'events.list.title': 'Urlaube und Reisen ({count})',
+	'events.empty':
+		'Noch nichts geplant. Oben eine Reise anlegen oder die .ics-Datei aus der Kalender-App importieren.',
+
+	'badge.today': 'heute',
+	'badge.past': 'vorbei',
+	'badge.inDays': 'in {count} T',
+
+	'photos.eyebrow': 'Fotos',
+	'photos.list.title': 'Fotos ({count})',
+	'photos.list.description':
+		'Jedes Bild wird auf die Panelgröße gebracht und auf dem Weg zur Karte auf die sieben Farben gerastert.',
+	'photos.add': 'Fotos hinzufügen',
+	'photos.addDialog': 'Fotos hinzufügen',
+	'photos.imageFilter': 'Bilder',
+	'photos.empty': 'Noch keine Fotos — auf der Karte landen dann nur Kalenderseiten.',
+	'photos.settings.description': 'Wie dieses Bild auf das Panel gelegt wird.',
+	'photos.fit': 'Einpassen',
+	'photos.fit.cover': 'Seite füllen, Rest beschneiden',
+	'photos.fit.contain': 'Ganzes Bild zeigen, weiß auffüllen',
+	'photos.autoRotate': 'Querformat-Fotos passend zum Panel drehen',
+	'photos.dither': 'Rastern',
+	'photos.dither.hint':
+		'Mischt die sieben verfügbaren Farben, damit Fotos ihre Abstufungen behalten. Für flache Grafiken ausschalten.',
+	'photos.unreadable': 'Diese Datei konnte nicht gelesen werden.',
+	'photos.converting': 'Wird umgerechnet…',
+
+	'export.eyebrow': 'Export',
+	'export.where.title': 'Zielordner',
+	'export.where.description':
+		'Hier auf die SD-Karte zeigen. Die App legt daneben einen Ordner pic und eine fileList.txt an — genau den Aufbau, den das Display erwartet.',
+	'export.chooseFolder': 'Ordner wählen',
+	'export.chooseFolderDialog': 'SD-Karte (oder einen beliebigen Ordner) wählen',
+	'export.noFolder': 'Noch nichts gewählt',
+	'export.clear.label': 'Karte vorher leeren',
+	'export.clear.hint':
+		'Entfernt die alten Bilder, die fileList.txt und die Indexdatei, die das Display hinterlässt. Dieser übersprungene Schritt ist der übliche Grund, warum eine Karte noch den letzten Monat zeigt.',
+	'export.what.title': 'Inhalt',
+	'export.contents': 'Was geschrieben wird',
+	'export.contents.calendar': 'Nur Kalenderseiten ({count})',
+	'export.contents.photos': 'Nur Fotos ({count})',
+	'export.contents.both': 'Kalenderseiten und Fotos ({count})',
+	'export.placement': 'Platz der Fotos',
+	'export.placement.append': 'Nach den Kalenderseiten',
+	'export.placement.interleave': 'Zwischen den Seiten verteilt',
+	'export.tooMany':
+		'{count} Bilder sind mehr als die {max}, für die das Display dokumentiert ist. Den Zeitraum kürzen oder ein paar Fotos weglassen.',
+	'export.generate.title': 'Erzeugen',
+	'export.run_one': '{count} Bild erzeugen',
+	'export.run_other': '{count} Bilder erzeugen',
+	'export.working': 'Läuft…',
+	'export.openFolder': 'Ordner öffnen',
+	'export.progress': '{done} / {total} — {label}',
+	'export.starting': 'Startet…',
+	'export.done_one': 'Fertig. {count} Bild geschrieben, dazu {path}.',
+	'export.done_other': 'Fertig. {count} Bilder geschrieben, dazu {path}.',
+
+	'device.eyebrow': 'Display',
+	'device.card.title': 'Die Karte zurücklegen',
+	'device.card.description':
+		'Das Display führt auf der Karte eigene Notizen, deshalb kommt es auf die Reihenfolge an.',
+	'device.card.step1': 'Die SD-Karte aus dem Display nehmen.',
+	'device.card.step2':
+		'Im Reiter Export darauf schreiben, mit „Karte vorher leeren“ eingeschaltet.',
+	'device.card.step3': 'Die Karte wieder einsetzen.',
+	'device.card.step4': 'Den Knopf neben dem Ständer drücken, um das Display neu zu starten.',
+	'device.card.step5': 'Erneut drücken, um zum nächsten Bild zu springen.',
+	'device.card.note':
+		'Die Bilder müssen im Ordner pic liegen — jeden anderen Unterordner ignoriert das Display — und die fileList.txt im Hauptverzeichnis bestimmt die Reihenfolge. Beides wird automatisch geschrieben.',
+	'device.firmware.title': 'Wie oft umgeblättert wird',
+	'device.firmware.description':
+		'Das Intervall steckt in der Firmware, nicht in einer Einstellung. Zum Ändern eine dieser Dateien auf die Platine kopieren.',
+	'device.firmware.step1': 'RUN halten, dann BOOT drücken, RUN loslassen, dann BOOT loslassen.',
+	'device.firmware.step2': 'Am Rechner erscheint ein Laufwerk namens RPI-RP2.',
+	'device.firmware.step3': 'Unten das Intervall wählen und dieses Laufwerk angeben.',
+	'device.firmware.none': 'In diesem Build sind keine Firmware-Dateien enthalten.',
+	'device.firmware.every': 'Alle {count} Stunden',
+	'device.firmware.dialog': 'Laufwerk RPI-RP2 wählen',
+	'device.firmware.copied': 'Nach {path} kopiert. Die Platine startet von selbst neu.',
+	'device.firmware.note':
+		'Damit das Intervall überhaupt greift, muss die automatische Aktualisierung am Display eingeschaltet sein. Mit 24 Stunden und einer Seite pro Tag bleibt der Kalender mit dem echten Datum im Takt.',
+
+	'preview.title': 'Vorschau',
+	'preview.previous': 'Vorherige Seite',
+	'preview.next': 'Nächste Seite',
+	'preview.pixels': '{width} × {height} px, echte Pixel',
+	'preview.page': 'Seite {index} von {total}',
+	'preview.empty':
+		'Keine Seiten in diesem Zeitraum. Ersten Tag und Anzahl der Tage im Reiter Einrichten prüfen.',
+
+	'io.import': 'Importieren',
+	'io.export.menu': 'Exportieren',
+	'io.importDialog': 'Geburtstage und Urlaube importieren',
+	'io.exportDialog': 'Geburtstage und Urlaube exportieren',
+	'io.filter.any': 'Kalenderdaten (JSON, CSV, ICS)',
+	'io.filter.all': 'Alle Dateien',
+	'io.export.birthdaysCsv': 'Geburtstage · CSV',
+	'io.export.birthdaysJson': 'Geburtstage · JSON',
+	'io.export.eventsCsv': 'Urlaube · CSV',
+	'io.export.eventsJson': 'Urlaube · JSON',
+	'io.export.allJson': 'Alles · JSON',
+	'io.export.allCsv': 'Alles · CSV',
+	'io.export.allIcs': 'Alles · ICS',
+	'io.nothingFound': 'In dieser Datei wurden keine Geburtstage oder Urlaube gefunden.',
+	'io.merge.title': '{summary} importieren',
+	'io.merge.question': 'Zum Vorhandenen hinzufügen oder es ersetzen?',
+	'io.merge.append': 'Zur Liste hinzufügen',
+	'io.merge.replace': 'Liste ersetzen',
+	'io.merge.current': 'Vorhanden sind derzeit {summary}.',
+	'io.summary.birthdays_one': '{count} Geburtstag',
+	'io.summary.birthdays_other': '{count} Geburtstage',
+	'io.summary.events_one': '{count} Urlaub',
+	'io.summary.events_other': '{count} Urlaube',
+	'io.summary.and': '{first} und {second}',
+	'io.summary.none': 'nichts',
+	'io.imported': '{summary} importiert.',
+}

@@ -1,0 +1,46 @@
+---
+import '@cascivo/themes/all.css'
+import '../styles/landing.css'
+import { SITE } from '../lib/site'
+// Read as text rather than imported as a stylesheet: see the comment on the
+// <style> tag below for why it cannot go through the bundle.
+import layerOrder from '../styles/layers.css?raw'
+
+interface Props {
+	title: string
+	description: string
+}
+
+const { title, description } = Astro.props
+const canonical = new URL(Astro.url.pathname, Astro.site)
+---
+
+<!doctype html>
+<html lang="en" data-theme="brutalist">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		{/*
+			Cascade layers take their position from first appearance, and Astro puts
+			per-component CSS ahead of a layout's imported CSS in the bundle — so an
+			order statement inside that bundle arrives after `@layer cascivo.component`
+			has already claimed the first slot, leaving the components the *lowest*
+			layer instead of the fourth. Emitting it inline, before Astro's stylesheet
+			link, is what makes the built order the canonical one.
+		*/}
+		<style is:inline set:html={layerOrder} />
+		<title>{title}</title>
+		<meta name="description" content={description} />
+		<link rel="canonical" href={canonical} />
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+		<meta property="og:type" content="website" />
+		<meta property="og:title" content={title} />
+		<meta property="og:description" content={description} />
+		<meta property="og:url" content={canonical} />
+		<meta property="og:site_name" content={SITE.name} />
+		<meta name="twitter:card" content="summary" />
+	</head>
+	<body>
+		<slot />
+	</body>
+</html>
