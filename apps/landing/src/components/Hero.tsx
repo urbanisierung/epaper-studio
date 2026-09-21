@@ -14,7 +14,7 @@ export function Hero() {
 					chores — convert your photos to the panel&rsquo;s seven colours, and write the whole card
 					in one press.
 				</Text>
-				<Flex gap={3} justify="center" wrap>
+				<Flex direction="horizontal" gap={3} justify="center" wrap>
 					<Button asChild size="lg">
 						<a href={SITE.releases}>Download for macOS, Windows or Linux</a>
 					</Button>

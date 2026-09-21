@@ -10,7 +10,7 @@ export function SiteHeader() {
 						{SITE.name}
 					</Text>
 				</Link>
-				<Flex align="center" gap={5} className="landing-nav-links">
+				<Flex direction="horizontal" align="center" gap={5} className="landing-nav-links">
 					<Link href="#features" size="sm" data-nav-optional>
 						Features
 					</Link>
