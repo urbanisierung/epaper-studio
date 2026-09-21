@@ -14,16 +14,9 @@ import { addDays, daysBetween, isValidDate, parseDate, startOfDay } from '../../
 import { useT } from '../../lib/i18n/useT'
 import { formatDayMonth, formatFullDate } from '../../lib/render/locale'
 import { useStudio } from '../../lib/state/store'
-import { DataTransferBar } from '../DataTransferBar'
 import { Section } from '../ui/controls'
 
-export function EventsPanel({
-	onError,
-	onNotice,
-}: {
-	onError: (message: string) => void
-	onNotice: (message: string) => void
-}) {
+export function EventsPanel() {
 	const t = useT()
 	const project = useStudio((state) => state.project)
 	const addEvent = useStudio((state) => state.addEvent)
@@ -105,7 +98,6 @@ export function EventsPanel({
 				index={2}
 				eyebrow={t('events.eyebrow')}
 				title={t('events.list.title', { count: project.events.length })}
-				action={<DataTransferBar subject="events" onError={onError} onNotice={onNotice} />}
 			>
 				{sorted.length === 0 ? (
 					<EmptyState

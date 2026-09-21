@@ -5,16 +5,9 @@ import { daysBetween, isValidDate, nextOccurrence, parseDate, startOfDay } from 
 import { useT } from '../../lib/i18n/useT'
 import { formatFullDate } from '../../lib/render/locale'
 import { useStudio } from '../../lib/state/store'
-import { DataTransferBar } from '../DataTransferBar'
 import { Section } from '../ui/controls'
 
-export function BirthdaysPanel({
-	onError,
-	onNotice,
-}: {
-	onError: (message: string) => void
-	onNotice: (message: string) => void
-}) {
+export function BirthdaysPanel() {
 	const t = useT()
 	const project = useStudio((state) => state.project)
 	const addBirthday = useStudio((state) => state.addBirthday)
@@ -90,7 +83,6 @@ export function BirthdaysPanel({
 				eyebrow={t('birthdays.eyebrow')}
 				title={t('birthdays.list.title', { count: project.birthdays.length })}
 				description={t('birthdays.list.description')}
-				action={<DataTransferBar subject="birthdays" onError={onError} onNotice={onNotice} />}
 			>
 				{project.birthdays.length > 6 && (
 					<div style={{ marginBlockEnd: 'var(--cascivo-space-3)' }}>
