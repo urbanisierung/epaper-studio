@@ -1,10 +1,10 @@
 import react from '@astrojs/react'
 import { defineConfig } from 'astro/config'
 
-// Update `site` if the page moves to a custom domain — it is what the sitemap
-// and canonical URLs are built from.
+// `site` is what canonical and Open Graph URLs are built from, so it is the
+// custom domain rather than the project's `*.pages.dev` address.
 export default defineConfig({
-	site: 'https://epaper-studio.pages.dev',
+	site: 'https://epaper-studio.u11g.com',
 	integrations: [react()],
 	vite: {
 		resolve: {

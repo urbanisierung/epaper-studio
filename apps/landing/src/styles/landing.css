@@ -1,6 +1,14 @@
 @layer cascivo.landing {
 	body {
 		margin: 0;
+
+		/*
+		 * The brutalist theme leaves `--cascivo-color-accent-text` at the raw
+		 * accent, so a Link renders in the theme's yellow — 1.3:1 against its own
+		 * cream background, well under the 4.5:1 AA floor and genuinely hard to
+		 * read. `--cascivo-link-color` is the documented hook for exactly this.
+		 */
+		--cascivo-link-color: var(--cascivo-color-foreground);
 	}
 
 	/* A readable page width, applied by every section. */
@@ -11,6 +19,11 @@
 
 	.landing-section {
 		padding-block: var(--cascivo-space-12);
+		/*
+		 * The header is sticky, so an in-page jump would otherwise park the
+		 * section heading underneath it. The header measures 3.56rem.
+		 */
+		scroll-margin-block-start: 4.5rem;
 	}
 
 	.landing-hero {
@@ -25,9 +38,13 @@
 		margin: 0;
 	}
 
+	/*
+	 * A readable measure, but no auto margin: the hero and the download section
+	 * centre it through their own centred flex context, and under a left-aligned
+	 * section heading an auto margin floated it into the middle of the column.
+	 */
 	.landing-lede {
 		max-inline-size: 42rem;
-		margin-inline: auto;
 	}
 
 	.landing-header {
@@ -44,12 +61,6 @@
 		justify-content: space-between;
 		gap: var(--cascivo-space-4);
 		padding-block: var(--cascivo-space-3);
-	}
-
-	.landing-nav-links {
-		display: flex;
-		align-items: center;
-		gap: var(--cascivo-space-5);
 	}
 
 	/* The links are secondary to the download button on a phone. */
@@ -73,6 +84,20 @@
 		padding-inline-start: var(--cascivo-space-5);
 		display: grid;
 		gap: var(--cascivo-space-2);
+	}
+
+	.landing-shot {
+		margin: 0;
+		display: grid;
+		gap: var(--cascivo-space-3);
+	}
+
+	/* The border is the frame — the screenshots have no chrome of their own. */
+	.landing-shot img {
+		inline-size: 100%;
+		block-size: auto;
+		display: block;
+		border: 2px solid var(--cascivo-color-border-strong);
 	}
 
 	.landing-footer {
