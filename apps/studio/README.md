@@ -60,18 +60,18 @@ macOS (one universal binary for Apple Silicon and Intel), Windows x86_64 and
 Linux x86_64.
 
 It runs on every pull request that touches this app and keeps the installers
-as run artifacts. To cut a release, bump the version in
-`src-tauri/tauri.conf.json` (and `package.json` and `src-tauri/Cargo.toml` to
-match), then push a matching tag:
+as run artifacts. To cut a release, push a tag — the tag is the version:
 
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The workflow refuses a tag that disagrees with `tauri.conf.json`, and on a
-match attaches the `.dmg`, `.msi`, `.exe`, `.AppImage`, `.deb` and `.rpm` to a
-draft GitHub release for you to publish.
+The workflow builds at the tagged version and attaches the `.dmg`, `.msi`,
+`.exe`, `.AppImage`, `.deb` and `.rpm` to a draft GitHub release for you to
+publish. It then writes that version into `src-tauri/tauri.conf.json` on the
+default branch, so the manifest follows the release rather than having to be
+bumped ahead of it.
 
 The bundles are unsigned, so macOS and Windows warn the first time someone
 runs them. Add the signing secrets from
