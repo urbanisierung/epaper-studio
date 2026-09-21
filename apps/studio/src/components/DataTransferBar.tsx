@@ -17,21 +17,21 @@ import { readTextFile, writeTextFile } from '../lib/io/tauri'
 import { useStudio } from '../lib/state/store'
 
 export interface DataTransferBarProps {
-	/** Which list this bar sits on; decides how a typeless file is read. */
-	subject: 'birthdays' | 'events' | 'chores'
 	onError: (message: string) => void
 	onNotice: (message: string) => void
 }
 
 /**
- * Import and export for birthdays and holidays.
+ * Import and export for every list the project holds.
  *
- * The two lists are kept apart in the app but belong together on disk: one
- * file holds both, so a backup, a hand-over or a move to another machine is a
- * single file rather than two that have to be kept in step. Each list can
- * still be exported on its own for a spreadsheet.
+ * Birthdays, holidays and chores are kept apart in the app but belong together
+ * on disk: one file holds all three, so a backup, a hand-over or a move to
+ * another machine is a single file rather than three that have to be kept in
+ * step. This sits in the top bar rather than on the lists themselves, because
+ * one import covers all of them — a copy per tab would suggest otherwise. Each
+ * list can still be exported on its own for a spreadsheet.
  */
-export function DataTransferBar({ subject, onError, onNotice }: DataTransferBarProps) {
+export function DataTransferBar({ onError, onNotice }: DataTransferBarProps) {
 	const t = useT()
 	const project = useStudio((state) => state.project)
 	const mergeBirthdays = useStudio((state) => state.mergeBirthdays)
@@ -52,7 +52,7 @@ export function DataTransferBar({ subject, onError, onNotice }: DataTransferBarP
 			})
 			if (typeof picked !== 'string') return
 
-			const data = parseCalendarData(await readTextFile(picked), picked, subject)
+			const data = parseCalendarData(await readTextFile(picked), picked)
 			if (countOf(data) === 0) {
 				onError(t('io.nothingFound'))
 				return
@@ -121,14 +121,14 @@ export function DataTransferBar({ subject, onError, onNotice }: DataTransferBarP
 	return (
 		<>
 			<Flex direction="horizontal" gap={2} wrap>
-				<Button variant="secondary" size="sm" onClick={handleImport}>
+				<Button variant="secondary" size="sm" onClick={handleImport} title={t('io.importTitle')}>
 					<Upload size={16} />
 					{t('io.import')}
 				</Button>
 				<Dropdown
 					placement="bottom-end"
 					trigger={
-						<Button variant="secondary" size="sm">
+						<Button variant="secondary" size="sm" title={t('io.exportTitle')}>
 							<Download size={16} />
 							{t('io.export.menu')}
 						</Button>

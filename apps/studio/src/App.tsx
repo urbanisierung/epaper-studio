@@ -27,6 +27,7 @@ import {
 import { open, save } from '@tauri-apps/plugin-dialog'
 import { useEffect, useState } from 'react'
 import { AuthorCredit } from './components/AuthorCredit'
+import { DataTransferBar } from './components/DataTransferBar'
 import { PreviewPane } from './components/PreviewPane'
 import { BirthdaysPanel } from './components/panels/BirthdaysPanel'
 import { ChoresPanel } from './components/panels/ChoresPanel'
@@ -164,6 +165,8 @@ export default function App() {
 						]}
 					/>
 
+					<DataTransferBar onError={showError} onNotice={showNotice} />
+
 					<Button
 						variant="secondary"
 						size="sm"
@@ -220,9 +223,9 @@ export default function App() {
 							</Alert>
 						)}
 						{tab === 'setup' && <SetupPanel />}
-						{tab === 'birthdays' && <BirthdaysPanel onError={showError} onNotice={showNotice} />}
-						{tab === 'events' && <EventsPanel onError={showError} onNotice={showNotice} />}
-						{tab === 'chores' && <ChoresPanel onError={showError} onNotice={showNotice} />}
+						{tab === 'birthdays' && <BirthdaysPanel />}
+						{tab === 'events' && <EventsPanel />}
+						{tab === 'chores' && <ChoresPanel />}
 						{tab === 'photos' && <PhotosPanel onError={showError} />}
 						{tab === 'export' && <ExportPanel onError={showError} />}
 						{tab === 'device' && <DevicePanel onError={showError} />}

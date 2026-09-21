@@ -17,9 +17,6 @@ export interface CalendarData {
 	chores: Chore[]
 }
 
-/** What a typeless file should be read as when nothing in it says. */
-export type DataKind = 'birthdays' | 'events' | 'chores' | 'both'
-
 export const EMPTY_DATA: CalendarData = { birthdays: [], events: [], chores: [] }
 
 export function countOf(data: CalendarData): number {
@@ -154,25 +151,23 @@ function foldLine(line: string): string[] {
  * Reads whatever the user picked.
  *
  * The format is taken from the file name where there is one to go by, and from
- * the contents where there is not. `fallback` decides which list a file without
- * any type marker lands in — a bare `name,date` CSV opened from the birthdays
- * tab is a list of birthdays.
+ * the contents where there is not.
  */
-export function parseCalendarData(text: string, path: string, fallback: DataKind): CalendarData {
+export function parseCalendarData(text: string, path: string): CalendarData {
 	const name = path.toLowerCase()
 	if (name.endsWith('.ics') || /^BEGIN:VCALENDAR/im.test(text)) {
 		return { ...parseIcs(text), chores: [] }
 	}
 	if (name.endsWith('.json') || /^\s*[[{]/.test(text)) {
-		return fromJson(text, fallback)
+		return fromJson(text)
 	}
-	return fromCsv(text, fallback)
+	return fromCsv(text)
 }
 
-function fromJson(text: string, fallback: DataKind): CalendarData {
+function fromJson(text: string): CalendarData {
 	const parsed: unknown = JSON.parse(text)
 
-	if (Array.isArray(parsed)) return fromRows(parsed as Record<string, unknown>[], fallback)
+	if (Array.isArray(parsed)) return fromRows(parsed as Record<string, unknown>[])
 
 	const source = (typeof parsed === 'object' && parsed !== null ? parsed : {}) as Record<
 		string,
@@ -192,16 +187,16 @@ function fromJson(text: string, fallback: DataKind): CalendarData {
 	return { birthdays: [], events: [], chores: [] }
 }
 
-function fromCsv(text: string, fallback: DataKind): CalendarData {
-	return fromRows(rowsOf(text) as unknown as Record<string, unknown>[], fallback)
+function fromCsv(text: string): CalendarData {
+	return fromRows(rowsOf(text) as unknown as Record<string, unknown>[])
 }
 
-/** Sorts loose rows into the two lists, by their `type` column where present. */
-function fromRows(rows: Record<string, unknown>[], fallback: DataKind): CalendarData {
+/** Sorts loose rows into the three lists, by their `type` column where present. */
+function fromRows(rows: Record<string, unknown>[]): CalendarData {
 	const data: CalendarData = { birthdays: [], events: [], chores: [] }
 
 	for (const row of rows) {
-		const kind = kindOf(row, fallback)
+		const kind = kindOf(row)
 		if (kind === 'birthdays') data.birthdays.push(...toBirthday(row))
 		else if (kind === 'chores') data.chores.push(...toChore(row))
 		else data.events.push(...toEvent(row))
@@ -210,10 +205,7 @@ function fromRows(rows: Record<string, unknown>[], fallback: DataKind): Calendar
 	return data
 }
 
-function kindOf(
-	row: Record<string, unknown>,
-	fallback: DataKind,
-): 'birthdays' | 'events' | 'chores' {
+function kindOf(row: Record<string, unknown>): 'birthdays' | 'events' | 'chores' {
 	const marker = String(row.type ?? row.kind ?? '')
 		.trim()
 		.toLowerCase()
@@ -227,20 +219,17 @@ function kindOf(
 	) {
 		return 'events'
 	}
-	return guessKind(row, fallback)
+	return guessKind(row)
 }
 
 /**
- * With no `type` column the shape has to say. A duration of more than a day is
- * only ever an event; anything else follows the list being imported into.
+ * With no `type` column the shape has to say. One import covers every list, so
+ * there is no tab to fall back on: a rota column is only ever a chore, a
+ * duration of more than a day is only ever an event, and a bare `name,date`
+ * row is read as a birthday.
  */
-function guessKind(
-	row: Record<string, unknown>,
-	fallback: DataKind,
-): 'birthdays' | 'events' | 'chores' {
-	// A rota column is only ever a chore, whichever list is being imported into.
+function guessKind(row: Record<string, unknown>): 'birthdays' | 'events' | 'chores' {
 	if (row.frequency !== undefined && String(row.frequency).trim() !== '') return 'chores'
-	if (fallback !== 'both') return fallback
 	const duration = Number(row.duration)
 	return Number.isFinite(duration) && duration > 1 ? 'events' : 'birthdays'
 }

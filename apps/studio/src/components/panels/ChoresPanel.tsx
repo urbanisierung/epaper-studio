@@ -19,19 +19,12 @@ import { isDueOn, personFor } from '../../lib/render/chores'
 import { formatFullDate } from '../../lib/render/locale'
 import { useStudio } from '../../lib/state/store'
 import { CHORE_FREQUENCIES, type Chore, type ChoreFrequency } from '../../lib/types'
-import { DataTransferBar } from '../DataTransferBar'
 import { Section } from '../ui/controls'
 
 /** A year is far enough to find the next turn of anything monthly or shorter. */
 const SEARCH_DAYS = 366
 
-export function ChoresPanel({
-	onError,
-	onNotice,
-}: {
-	onError: (message: string) => void
-	onNotice: (message: string) => void
-}) {
+export function ChoresPanel() {
 	const t = useT()
 	const project = useStudio((state) => state.project)
 	const addChore = useStudio((state) => state.addChore)
@@ -132,7 +125,6 @@ export function ChoresPanel({
 				eyebrow={t('chores.eyebrow')}
 				title={t('chores.list.title', { count: project.chores.length })}
 				description={t('chores.list.description')}
-				action={<DataTransferBar subject="chores" onError={onError} onNotice={onNotice} />}
 			>
 				{project.chores.length === 0 ? (
 					<EmptyState

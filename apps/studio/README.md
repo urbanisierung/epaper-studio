@@ -80,19 +80,26 @@ runs them. Add the signing secrets from
 ## Using it
 
 The app's own language (English or German) and the light or dark theme are in
-the top bar, next to **Open** and **Save**.
+the top bar, next to **Import**, **Export**, **Open** and **Save**.
+
+**Import** and **Export** cover every list at once, so they sit in the top bar
+rather than on the individual tabs. **Import** reads birthdays, holidays and
+chores out of a single file — JSON, CSV or ICS — and asks whether to add them
+to what is already there or replace it; only the lists the file actually
+carries are touched, so importing a file of birthdays will not empty your
+holidays. **Export** writes all three together, or any one list on its own for
+a spreadsheet. (**Open** and **Save** are for the whole project file, including
+its settings and photos.)
 
 1. **Setup** — pick portrait or landscape, the first day and how many days to
    cover, and the language the pages are printed in.
-2. **Birthdays**, **Holidays** and **Chores** — type them in, or import a file
-   you already have. A chore takes a name, how often it comes round (daily,
-   weekly, fortnightly or monthly), the first day it is due, and the people who
-   take turns in order — the first person listed takes that first turn. Leave
-   the people empty for a job nobody is assigned. **Chores per page** on the
-   Setup tab caps how many a page lists, and zero leaves them off entirely. **Import** reads birthdays and holidays out of the same file and asks
-   whether to add them or replace what is there; **Export** offers both lists
-   together, or either one on its own. A trip lasting several days takes one
-   page, not one per day.
+2. **Birthdays**, **Holidays** and **Chores** — type them in, or bring them in
+   with **Import** in the top bar. A chore takes a name, how often it comes
+   round (daily, weekly, fortnightly or monthly), the first day it is due, and
+   the people who take turns in order — the first person listed takes that
+   first turn. Leave the people empty for a job nobody is assigned. **Chores
+   per page** on the Setup tab caps how many a page lists, and zero leaves them
+   off entirely. A trip lasting several days takes one page, not one per day.
 3. **Photos** — optional. Add pictures and check how they dither.
 4. **Export** — plug in the SD card, choose it, press Generate.
 5. **Display** — how to get the card back into the display, and how to change
