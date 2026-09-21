@@ -74,7 +74,8 @@ libraries (`libwebkit2gtk-4.1-dev`, `librsvg2-dev`, `patchelf`) — see
 
 The deploy needs two repository secrets — `CF_ACCOUNT_ID` and `CF_API_TOKEN`
 (a token with the *Cloudflare Pages: Edit* permission) — and a Pages project
-named `epaper-studio` that already exists. Nothing else in CI needs a secret.
+named `u11g-epaper-studio` that already exists. Nothing else in CI needs a
+secret.
 
 ### Cutting a release
 
