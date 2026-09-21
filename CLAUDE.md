@@ -115,49 +115,59 @@ Before finishing any task, verify:
 
 ### Tech Stack
 
-- **Package manager:** pnpm `11.5` (workspaces)
-- **Task runner:** Turborepo `2.9`
-- **Language:** TypeScript `6.0` (strict)
-- **Web framework:** Astro `6.4`
-- **Bundler / dev server:** Vite `8`
-- **Testing:** Vitest `4.1`
-- **Lint + format:** Biome `2.4`
-- **UI library:** Preact `10.29` (via `@astrojs/preact` `5.1`)
+- **Package manager:** pnpm `12.5` (workspaces)
+- **Task runner:** Turborepo `2.11`
+- **Language:** TypeScript `5.8`+ (strict)
+- **Desktop shell:** Tauri `2` (Rust), with the image pipeline in `epaper-core`
+- **Web framework:** Astro `7` (landing page)
+- **Bundler / dev server:** Vite `6` (desktop app), Vite `8` via Astro (landing)
+- **Testing:** `cargo test` for `epaper-core`
+- **Lint + format:** Biome `2.5`
+- **UI library:** React `19` with [cascivo](https://cascivo.com)
 - **State management:** Zustand `5.0`
+
+> **Why React and not Preact.** cascivo is a React design system, and Preact
+> under Astro's compat layer is
+> [documented as broken](https://cascivo.com/docs/using-with-astro) — its own
+> guide says to use React islands. The desktop app is React for the same
+> reason. Preact stays out of both apps.
 
 ### Project Structure
 
 ```
 epaper-studio/
-├── package.json            # root; "packageManager": "pnpm@11.5.x"
-├── pnpm-workspace.yaml      # workspace globs: apps/*, packages/*
-├── turbo.json              # task pipeline (build, test, lint, check-types)
+├── package.json            # root; "packageManager": "pnpm@12.5.x"
+├── pnpm-workspace.yaml     # workspace globs: apps/*, packages/*
+├── turbo.json              # task pipeline (build, test, check-types, dev)
 ├── biome.json              # shared lint + format config
 ├── tsconfig.json           # base config, extended per package
 ├── apps/
-│   └── web/                # Astro app (Preact islands, Zustand stores)
-└── packages/
-    ├── ui/                 # shared Preact components
-    └── config/             # shared tsconfig / Biome presets
+│   ├── studio/             # the desktop app
+│   │   ├── src/            # React UI + the page-drawing code (canvas)
+│   │   └── src-tauri/      # Tauri commands; crates/epaper-core (Rust)
+│   └── landing/            # Astro landing page (React islands)
+└── packages/               # nothing shared yet — add one when there is
 ```
 
 ### Build & Check Commands
 
 - Install: `pnpm install`
-- Dev (all apps): `pnpm turbo dev`
-- Build: `pnpm turbo build`
-- Test: `pnpm turbo test` (Vitest)
-- Test (watch): `pnpm vitest`
-- Lint + format check: `pnpm biome check .`
-- Apply safe fixes: `pnpm biome check --write .`
-- Type-check: `pnpm turbo check-types` (`tsc --noEmit` per package)
+- Desktop app: `pnpm studio` (Vite + the Tauri window)
+- Landing page: `pnpm landing`
+- Build: `pnpm build` (`turbo run build`)
+- Test: `pnpm test` (`cargo test` for `epaper-core`)
+- Lint + format check: `pnpm lint` (`biome check .`)
+- Apply safe fixes: `pnpm format` (`biome check --write .`)
+- Type-check: `pnpm check-types` (`tsc --noEmit` / `astro check` per app)
 
 ### Conventions
 
 - Every package is independently buildable and type-checked. Never import across packages via relative `../../` paths — import by the workspace package name.
 - Declare each task's inputs/outputs in `turbo.json` so caching stays correct.
 - TypeScript `strict` is on everywhere; no `any` — use `unknown` and narrow.
-- Biome is the single source of truth for lint and format. Do not add ESLint or Prettier alongside it.
-- Keep interactivity in Preact islands; prefer static Astro output where possible.
+- Biome is the single source of truth for lint and format. Do not add ESLint or Prettier alongside it. Biome cannot see an `.astro` file's template, so the unused-import rules are switched off for those files in `biome.json` — do not rely on them there.
+- Keep interactivity in islands; prefer static Astro output where possible. The landing page hydrates one component, and should stay that way.
+- Style with cascivo tokens and components. App-local CSS goes in that app's own cascade layer (`cascivo.epaper`, `cascivo.landing`), never unlayered — unlayered author CSS beats every cascivo layer.
 - Keep Zustand stores small and colocated with their feature; select narrow slices to avoid needless re-renders.
-- Pin tool versions; bump deliberately and run `pnpm turbo build test` after upgrades.
+- Pin tool versions; bump deliberately and run `pnpm build test check-types` after upgrades.
+- No real dates, names or other personal data in this repository — not in fixtures, defaults, examples or tests. The app's lists start empty on purpose.

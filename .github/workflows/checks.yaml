@@ -1,0 +1,49 @@
+name: "Checks"
+
+# Lint, format and typecheck the whole workspace. The per-app workflows only
+# run when their own files change, so this is what covers the shared config.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+concurrency:
+  group: checks-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  ASTRO_TELEMETRY_DISABLED: "1"
+
+jobs:
+  checks:
+    name: "Lint and typecheck"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+        with:
+          run_install: false
+
+      - name: Install Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint and check formatting
+        run: pnpm biome ci .
+
+      - name: Typecheck
+        run: pnpm turbo run check-types

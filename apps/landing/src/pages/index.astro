@@ -1,0 +1,24 @@
+---
+import { Download } from '../components/Download'
+import { Faq } from '../components/Faq'
+import { Features } from '../components/Features'
+import { Hero } from '../components/Hero'
+import { HowItWorks } from '../components/HowItWorks'
+import { SiteFooter } from '../components/SiteFooter'
+import { SiteHeader } from '../components/SiteHeader'
+import Layout from '../layouts/Layout.astro'
+import { SITE } from '../lib/site'
+---
+
+<Layout title={`${SITE.name} — ${SITE.tagline}`} description={SITE.description}>
+	<SiteHeader />
+	<main>
+		<Hero />
+		<Features />
+		<HowItWorks />
+		<Download />
+		{/* The only island on the page: the accordion needs to open. */}
+		<Faq client:visible />
+	</main>
+	<SiteFooter />
+</Layout>
