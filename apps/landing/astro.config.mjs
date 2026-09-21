@@ -4,7 +4,7 @@ import { defineConfig } from 'astro/config'
 // Update `site` if the page moves to a custom domain — it is what the sitemap
 // and canonical URLs are built from.
 export default defineConfig({
-	site: 'https://epaper-studio.pages.dev',
+	site: 'https://u11g-epaper-studio.pages.dev',
 	integrations: [react()],
 	vite: {
 		resolve: {
