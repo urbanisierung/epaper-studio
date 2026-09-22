@@ -26,6 +26,27 @@ export function isAccentColor(value: unknown): value is AccentColor {
 export type Orientation = 'portrait' | 'landscape'
 export type Fit = 'cover' | 'contain'
 
+/**
+ * The page designs a panel can be drawn in.
+ *
+ * `classic` is the layout the app has always drawn. The other five are the
+ * designs from the panel brief, laid out for a portrait 480x800 panel.
+ */
+export type PanelTemplate = 'classic' | 'masthead' | 'ledger' | 'tiles' | 'poster' | 'agenda'
+
+export const PANEL_TEMPLATES: PanelTemplate[] = [
+	'classic',
+	'masthead',
+	'ledger',
+	'tiles',
+	'poster',
+	'agenda',
+]
+
+export function isPanelTemplate(value: unknown): value is PanelTemplate {
+	return PANEL_TEMPLATES.includes(value as PanelTemplate)
+}
+
 export interface Birthday {
 	id: string
 	name: string
@@ -96,6 +117,8 @@ export interface Settings {
 	width: number
 	height: number
 	fontFamily: string
+	/** Which page design is drawn. */
+	template: PanelTemplate
 	accentColor: PaletteColor
 	/** How many entries the event list shows at most. */
 	maxEvents: number

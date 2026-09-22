@@ -2,7 +2,7 @@ import { formatDate, isValidDate, parseDate } from '../date'
 import { defaultProject, defaultSettings, newId } from '../defaults'
 import { isLanguage } from '../i18n'
 import { isThemeSetting } from '../theme'
-import { isAccentColor, isChoreFrequency, type Project } from '../types'
+import { isAccentColor, isChoreFrequency, isPanelTemplate, type Project } from '../types'
 
 /**
  * The whole project is one JSON file: autosaved so nothing is lost between
@@ -39,6 +39,7 @@ export function parseProject(text: string): Project {
 				: defaultSettings().uiLanguage,
 			theme: isThemeSetting(settings.theme) ? settings.theme : defaultSettings().theme,
 			accentColor: isAccentColor(settings.accentColor) ? settings.accentColor : 'red',
+			template: isPanelTemplate(settings.template) ? settings.template : 'classic',
 			numberOfDays: clamp(Number(settings.numberOfDays) || 30, 1, 400),
 			maxEvents: clamp(Number(settings.maxEvents) || 4, 1, 10),
 			maxChores: clamp(finite(settings.maxChores, 3), 0, 6),

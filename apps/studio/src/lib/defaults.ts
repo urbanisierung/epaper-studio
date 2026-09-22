@@ -15,6 +15,7 @@ export function defaultSettings(): Settings {
 		width: 480,
 		height: 800,
 		fontFamily: 'Inter',
+		template: 'classic',
 		accentColor: 'red',
 		maxEvents: 4,
 		lookaheadDays: 30,
