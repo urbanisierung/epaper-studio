@@ -69,7 +69,7 @@ libraries (`libwebkit2gtk-4.1-dev`, `librsvg2-dev`, `patchelf`) — see
 | Workflow | What it does |
 | --- | --- |
 | [`checks.yaml`](./.github/workflows/checks.yaml) | Biome and the type-checkers, on every pull request. |
-| [`build-app.yaml`](./.github/workflows/build-app.yaml) | Tests and lints `epaper-core`, then builds the desktop app for all three platforms. On a `v*` tag it attaches the installers to a draft release. |
+| [`build-app.yaml`](./.github/workflows/build-app.yaml) | Tests and lints `epaper-core`, then builds the desktop app for all three platforms. On a `v*` tag it attaches the installers to a draft release and writes the tagged version back into `tauri.conf.json`. |
 | [`deploy-landing.yaml`](./.github/workflows/deploy-landing.yaml) | Builds the landing page on every pull request, and publishes it to Cloudflare Pages from `main`. |
 
 The deploy needs two repository secrets — `CF_ACCOUNT_ID` and `CF_API_TOKEN`
@@ -79,18 +79,18 @@ secret.
 
 ### Cutting a release
 
-Bump the version in `apps/studio/src-tauri/tauri.conf.json`, and in
-`apps/studio/package.json` and `apps/studio/src-tauri/Cargo.toml` to match,
-then push a tag:
+The tag is the version. Push one:
 
 ```bash
 git tag v0.1.0
 git push origin v0.1.0
 ```
 
-The workflow refuses a tag that disagrees with `tauri.conf.json`, and on a
-match builds all three platforms and attaches the installers to a draft
-release for you to publish.
+The workflow builds all three platforms at the tagged version and attaches the
+installers to a draft release for you to publish. It then commits that version
+into `apps/studio/src-tauri/tauri.conf.json` on `main`, so the manifest the app
+ships always matches the release it came from — there is nothing to bump by
+hand beforehand.
 
 ## Your data
 
