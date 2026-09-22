@@ -8,8 +8,15 @@ Nothing else to install: no Node, no Python, no ImageMagick. It is one app.
 
 ## What it does
 
-- **A page per day.** Today's date on a tile, the birthdays and trips coming
-  up, whose turn it is at the chores, and the current month with today circled.
+- **A page per day.** Today's date, the birthdays and trips coming up, and the
+  current month with today marked.
+- **Six page designs.** The original — date tile, event list, chore rota,
+  month grid — plus the five panel designs: Masthead, Ledger, Tiles, Poster
+  and Agenda. Each switches to a birthday state when a birthday falls on the
+  page's own day: the name and the new age become the largest things on the
+  page and the accent turns into a solid fill. The five are drawn for a
+  portrait 480 × 800 panel and show the date, the events and the month; chores
+  stay on the original design.
 - **Birthdays and holidays** are edited in the app — not in source code — and
   travel together with the chores: one JSON or CSV file holds all three, so a
   backup or a hand-over is a single file. Any one list can still be exported on
@@ -92,7 +99,7 @@ a spreadsheet. (**Open** and **Save** are for the whole project file, including
 its settings and photos.)
 
 1. **Setup** — pick portrait or landscape, the first day and how many days to
-   cover, and the language the pages are printed in.
+   cover, the page design, and the language the pages are printed in.
 2. **Birthdays**, **Holidays** and **Chores** — type them in, or bring them in
    with **Import** in the top bar. A chore takes a name, how often it comes
    round (daily, weekly, fortnightly or monthly), the first day it is due, and
@@ -122,6 +129,7 @@ the layer order stays the documented one.
 src/                     React UI, and the drawing code (the webview's canvas)
   lib/i18n/              the app's own English and German catalogues
   lib/render/            layout, locale strings, page rendering, schedule, rota
+  lib/render/templates/  the five panel designs and the month grid they share
   lib/io/                project file, CSV, ICS, calls into Rust
   components/ui/         the two compositions over cascivo this app repeats
 src-tauri/

@@ -10,6 +10,13 @@ export interface DayEntry {
 	highlighted: boolean
 	/** When it happens, used for ordering. */
 	at: Date
+	kind: 'birthday' | 'event'
+	/** The age being reached, or null for an event or when ages are hidden. */
+	age: number | null
+	/** The date of birth, for the designs that print it. Null for an event. */
+	born: Date | null
+	/** Days from the page's own date; 0 means it happens on this page. */
+	days: number
 }
 
 /**
@@ -38,10 +45,20 @@ export function entriesFor(project: Project, day: Date): DayEntry[] {
 			? `${formatFullDate(locale, born)} - ${age}`
 			: formatFullDate(locale, born)
 
+		const line = {
+			name: birthday.name,
+			subtitle,
+			at: next,
+			kind: 'birthday' as const,
+			age: settings.showAges ? age : null,
+			born,
+			days: distance,
+		}
+
 		if (distance === 0) {
-			todays.push({ name: birthday.name, subtitle, highlighted: true, at: next })
+			todays.push({ ...line, highlighted: true })
 		} else if (distance <= settings.lookaheadDays) {
-			upcoming.push({ name: birthday.name, subtitle, highlighted: false, at: next })
+			upcoming.push({ ...line, highlighted: false })
 		}
 	}
 
@@ -52,19 +69,22 @@ export function entriesFor(project: Project, day: Date): DayEntry[] {
 		const distance = daysBetween(today, start)
 		if (distance < 0) continue // already over
 
+		const line = {
+			name: event.name,
+			at: start,
+			kind: 'event' as const,
+			age: null,
+			born: null,
+			days: distance,
+		}
+
 		if (distance === 0) {
-			todays.push({
-				name: event.name,
-				subtitle: formatToday(locale),
-				highlighted: true,
-				at: start,
-			})
+			todays.push({ ...line, subtitle: formatToday(locale), highlighted: true })
 		} else {
 			upcoming.push({
-				name: event.name,
+				...line,
 				subtitle: formatDayCount(locale, distance),
 				highlighted: false,
-				at: start,
 			})
 		}
 	}

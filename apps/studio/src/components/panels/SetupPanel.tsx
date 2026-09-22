@@ -15,8 +15,33 @@ import { useT } from '../../lib/i18n/useT'
 import { LOCALES } from '../../lib/render/locale'
 import { buildSchedule } from '../../lib/render/schedule'
 import { useStudio } from '../../lib/state/store'
-import { ACCENT_COLORS, type AccentColor, DEVICE_PRESETS, PALETTE } from '../../lib/types'
+import {
+	ACCENT_COLORS,
+	type AccentColor,
+	DEVICE_PRESETS,
+	PALETTE,
+	PANEL_TEMPLATES,
+	type PanelTemplate,
+} from '../../lib/types'
 import { Section } from '../ui/controls'
+
+const TEMPLATE_LABELS: Record<PanelTemplate, MessageKey> = {
+	classic: 'template.classic',
+	masthead: 'template.masthead',
+	ledger: 'template.ledger',
+	tiles: 'template.tiles',
+	poster: 'template.poster',
+	agenda: 'template.agenda',
+}
+
+const TEMPLATE_HINTS: Record<PanelTemplate, MessageKey> = {
+	classic: 'template.classic.hint',
+	masthead: 'template.masthead.hint',
+	ledger: 'template.ledger.hint',
+	tiles: 'template.tiles.hint',
+	poster: 'template.poster.hint',
+	agenda: 'template.agenda.hint',
+}
 
 const COLOR_LABELS: Record<AccentColor, MessageKey> = {
 	red: 'color.red',
@@ -149,6 +174,36 @@ export function SetupPanel() {
 
 			<Section
 				index={4}
+				eyebrow={t('setup.eyebrow')}
+				title={t('setup.template.title')}
+				description={t('setup.template.description')}
+			>
+				<Flex direction="horizontal" gap={2} wrap>
+					{PANEL_TEMPLATES.map((id) => (
+						<Button
+							key={id}
+							variant={settings.template === id ? 'primary' : 'secondary'}
+							size="sm"
+							onClick={() => patch({ template: id })}
+						>
+							{t(TEMPLATE_LABELS[id])}
+						</Button>
+					))}
+				</Flex>
+				<div style={{ marginBlockStart: 'var(--cascivo-space-3)' }}>
+					<Text size="sm" muted>
+						{t(TEMPLATE_HINTS[settings.template])}
+					</Text>
+					{settings.template !== 'classic' && (
+						<Text size="sm" muted>
+							{t('setup.template.note')}
+						</Text>
+					)}
+				</div>
+			</Section>
+
+			<Section
+				index={5}
 				eyebrow={t('setup.eyebrow')}
 				title={t('setup.appearance.title')}
 				description={t('setup.appearance.description')}

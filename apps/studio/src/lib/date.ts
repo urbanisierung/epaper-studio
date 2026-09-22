@@ -46,3 +46,44 @@ export function nextOccurrence(anniversary: Date, from: Date): Date {
 export function daysBetween(from: Date, to: Date): number {
 	return Math.round((startOfDay(to).getTime() - startOfDay(from).getTime()) / DAY)
 }
+
+/**
+ * ISO-8601 week number: weeks run Monday to Sunday, and week 1 is the one
+ * holding the first Thursday of the year.
+ */
+export function isoWeek(date: Date): number {
+	const thursday = startOfDay(date)
+	// Shift to the Thursday of this week, which always sits in the owning year.
+	thursday.setDate(thursday.getDate() + 3 - ((thursday.getDay() + 6) % 7))
+	const firstThursday = new Date(thursday.getFullYear(), 0, 4)
+	firstThursday.setDate(firstThursday.getDate() + 3 - ((firstThursday.getDay() + 6) % 7))
+	return 1 + Math.round((thursday.getTime() - firstThursday.getTime()) / (7 * DAY))
+}
+
+/** 1 on 1 January. */
+export function dayOfYear(date: Date): number {
+	return daysBetween(new Date(date.getFullYear(), 0, 1), date) + 1
+}
+
+export function daysInYear(year: number): number {
+	return daysBetween(new Date(year, 0, 1), new Date(year + 1, 0, 1))
+}
+
+/** Weeks of a month as day numbers, 0 for cells outside the month. */
+export function weeksOf(year: number, monthIndex: number, weekStartsOn: 0 | 1): number[][] {
+	const firstWeekday = new Date(year, monthIndex, 1).getDay()
+	const leading = (firstWeekday - weekStartsOn + 7) % 7
+	const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
+
+	const cells: number[] = [
+		...Array(leading).fill(0),
+		...Array.from({ length: daysInMonth }, (_, index) => index + 1),
+	]
+	while (cells.length % 7 !== 0) cells.push(0)
+
+	const weeks: number[][] = []
+	for (let index = 0; index < cells.length; index += 7) {
+		weeks.push(cells.slice(index, index + 7))
+	}
+	return weeks
+}

@@ -9,10 +9,10 @@
 export async function ensureFont(family: string): Promise<void> {
 	if (typeof document === 'undefined' || !document.fonts) return
 	try {
-		await Promise.all([
-			document.fonts.load(`16px "${family}"`),
-			document.fonts.load(`bold 16px "${family}"`),
-		])
+		// The page designs set from 600 up to 900; each weight is a separate face.
+		await Promise.all(
+			[600, 700, 800, 900].map((weight) => document.fonts.load(`${weight} 16px "${family}"`)),
+		)
 	} catch {
 		// A family the system cannot supply falls back; that is the browser's call.
 	}

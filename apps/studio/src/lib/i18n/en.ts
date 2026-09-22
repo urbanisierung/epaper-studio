@@ -96,6 +96,24 @@ export const en = {
 	'setup.weekStart.monday': 'Monday',
 	'setup.weekStart.sunday': 'Sunday',
 
+	'setup.template.title': 'Page design',
+	'setup.template.description': 'How a page is laid out. The preview follows your choice.',
+	'setup.template.note':
+		'The five panel designs are composed for a portrait 480 × 800 panel and are scaled to fit any other size. They show the date, the events and the month — chores appear on the original layout only.',
+	'template.classic': 'Original',
+	'template.classic.hint': 'Day tile, event list, chores and a month grid.',
+	'template.masthead': 'Masthead',
+	'template.masthead.hint':
+		'The date leads, events follow as a ruled list, month grid at the foot.',
+	'template.ledger': 'Ledger',
+	'template.ledger.hint': 'An outlined numeral over a Date / Entry / Left table.',
+	'template.tiles': 'Tiles',
+	'template.tiles.hint': 'A square date tile beside today’s summary, then one card per event.',
+	'template.poster': 'Poster',
+	'template.poster.hint': 'One huge numeral, with the next entries in a footer band.',
+	'template.agenda': 'Agenda',
+	'template.agenda.hint': 'Date and entries only — no month grid.',
+
 	'setup.appearance.title': 'Appearance',
 	'setup.appearance.description':
 		'The panel can only show seven colours, so the accent is picked from those.',
@@ -209,6 +227,37 @@ export const en = {
 	'device.firmware.copied': 'Copied to {path}. The board restarts on its own.',
 	'device.firmware.note':
 		'Automatic refresh has to be switched on at the display for the interval to have any effect. With a 24-hour interval and one page per day, the calendar keeps step with the real date.',
+
+	/**
+	 * Text printed on the panel itself.
+	 *
+	 * These are picked with the *calendar* language (the `locale` setting), not
+	 * the app language, so a German calendar reads German however the app is set.
+	 */
+	'page.comingUp': 'Coming up',
+	'page.ahead': 'Ahead',
+	'page.nextEntries': 'Next entries',
+	'page.nextUp': 'Next up',
+	'page.today': 'Today',
+	'page.noEventsToday': 'Nothing on today',
+	'page.entriesThisMonth_one': '{count} entry this month',
+	'page.entriesThisMonth_other': '{count} entries this month',
+	'page.birthdayToday': 'Birthday today',
+	'page.happyBirthday': 'Happy birthday {name}',
+	'page.birthday': 'Birthday',
+	'page.holiday': 'Holiday',
+	'page.turns': 'turns {age}',
+	'page.is': 'is {age}',
+	'page.born': 'born {date}',
+	'page.bornYears': 'born {year} · {count} years',
+	'page.yearsToday': 'years today',
+	'page.week': 'Week {count}',
+	'page.dayOfYear': 'Day {day} / {total}',
+	'page.column.date': 'Date',
+	'page.column.entry': 'Entry',
+	'page.column.left': 'Left',
+	'page.inDays': 'in {count} d',
+	'page.onTheDay': 'today',
 
 	'preview.title': 'Preview',
 	'preview.previous': 'Previous page',

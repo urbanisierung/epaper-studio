@@ -95,6 +95,24 @@ export const de: Record<MessageKey, string> = {
 	'setup.weekStart.monday': 'Montag',
 	'setup.weekStart.sunday': 'Sonntag',
 
+	'setup.template.title': 'Seitendesign',
+	'setup.template.description': 'Wie eine Seite aufgebaut ist. Die Vorschau folgt der Auswahl.',
+	'setup.template.note':
+		'Die fünf Panel-Designs sind für ein hochformatiges 480 × 800-Panel entworfen und werden auf jede andere Größe skaliert. Sie zeigen Datum, Einträge und Monat — Aufgaben stehen nur im ursprünglichen Layout.',
+	'template.classic': 'Ursprünglich',
+	'template.classic.hint': 'Datumskachel, Einträge, Aufgaben und Monatsübersicht.',
+	'template.masthead': 'Kopfzeile',
+	'template.masthead.hint':
+		'Das Datum führt, darunter eine linierte Liste, unten die Monatsübersicht.',
+	'template.ledger': 'Register',
+	'template.ledger.hint': 'Konturzahl über einer Tabelle aus Datum / Eintrag / Rest.',
+	'template.tiles': 'Kacheln',
+	'template.tiles.hint': 'Quadratische Datumskachel neben der Tagesübersicht, dann je eine Karte.',
+	'template.poster': 'Plakat',
+	'template.poster.hint': 'Eine riesige Zahl, die nächsten Einträge in einem Fußband.',
+	'template.agenda': 'Agenda',
+	'template.agenda.hint': 'Nur Datum und Einträge — ohne Monatsübersicht.',
+
 	'setup.appearance.title': 'Darstellung',
 	'setup.appearance.description':
 		'Das Panel kann nur sieben Farben zeigen, die Akzentfarbe stammt deshalb aus diesen.',
@@ -210,6 +228,32 @@ export const de: Record<MessageKey, string> = {
 	'device.firmware.copied': 'Nach {path} kopiert. Die Platine startet von selbst neu.',
 	'device.firmware.note':
 		'Damit das Intervall überhaupt greift, muss die automatische Aktualisierung am Display eingeschaltet sein. Mit 24 Stunden und einer Seite pro Tag bleibt der Kalender mit dem echten Datum im Takt.',
+
+	/** Siehe `page.*` im englischen Katalog: Text, der auf dem Panel steht. */
+	'page.comingUp': 'Demnächst',
+	'page.ahead': 'Voraus',
+	'page.nextEntries': 'Nächste Einträge',
+	'page.nextUp': 'Als Nächstes',
+	'page.today': 'Heute',
+	'page.noEventsToday': 'Heute nichts',
+	'page.entriesThisMonth_one': '{count} Eintrag diesen Monat',
+	'page.entriesThisMonth_other': '{count} Einträge diesen Monat',
+	'page.birthdayToday': 'Geburtstag heute',
+	'page.happyBirthday': 'Alles Gute {name}',
+	'page.birthday': 'Geburtstag',
+	'page.holiday': 'Feiertag',
+	'page.turns': 'wird {age}',
+	'page.is': 'ist {age}',
+	'page.born': 'geboren am {date}',
+	'page.bornYears': 'geboren {year} · {count} Jahre',
+	'page.yearsToday': 'Jahre heute',
+	'page.week': 'KW {count}',
+	'page.dayOfYear': 'Tag {day} / {total}',
+	'page.column.date': 'Datum',
+	'page.column.entry': 'Eintrag',
+	'page.column.left': 'Rest',
+	'page.inDays': 'in {count} T',
+	'page.onTheDay': 'heute',
 
 	'preview.title': 'Vorschau',
 	'preview.previous': 'Vorherige Seite',

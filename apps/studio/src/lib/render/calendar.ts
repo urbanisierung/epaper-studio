@@ -1,37 +1,59 @@
-import { startOfDay } from '../date'
+import { startOfDay, weeksOf } from '../date'
 import { PALETTE, type Project } from '../types'
 import { type ChoreDuty, choresFor } from './chores'
+import { drawText, fitFontSize, fontSpec, INK, roundedRect, WHITE } from './draw'
 import { entriesFor } from './entries'
 import type { PageLayout } from './layout'
 import { computeLayout } from './layout'
 import { monthLong, monthShort, weekdayHeadings, weekdayShort } from './locale'
-
-const WHITE = PALETTE.white
-const INK = PALETTE.black
+import { buildPanel } from './panel'
+import { DESIGN_HEIGHT, DESIGN_WIDTH, PANEL_DESIGNS } from './templates'
 
 /**
- * Draws one calendar page.
+ * Draws one calendar page in the design the project has chosen.
  *
- * This is the port of `CalendarUtils` from `packages/shared-utils`, with the
- * German string arrays replaced by `Intl` and the hardcoded 480x800
- * coordinates replaced by {@link computeLayout}.
+ * `classic` is the layout below: the port of `CalendarUtils` from
+ * `packages/shared-utils`, with the German string arrays replaced by `Intl`
+ * and the hardcoded 480x800 coordinates replaced by {@link computeLayout}.
+ * The other designs come from the panel brief and are drawn by
+ * {@link PANEL_DESIGNS}.
  */
 export function drawPage(canvas: HTMLCanvasElement, project: Project, day: Date): void {
-	const { width, height } = project.settings
+	const { width, height, template } = project.settings
 	canvas.width = width
 	canvas.height = height
 
 	const ctx = canvas.getContext('2d')
 	if (!ctx) throw new Error('This system has no 2D canvas support.')
 
+	ctx.setTransform(1, 0, 0, 1, 0, 0)
+	ctx.fillStyle = WHITE
+	ctx.fillRect(0, 0, width, height)
+
+	if (template === 'classic') {
+		drawClassic(ctx, project, day)
+		return
+	}
+
+	// The brief's designs are drawn at exactly 480x800. Scaling the whole
+	// canvas keeps every proportion it specifies — the 34 px grid cell, the
+	// 150 px numeral — on a panel of any size, rather than reflowing a layout
+	// that was composed for one.
+	const scale = Math.min(width / DESIGN_WIDTH, height / DESIGN_HEIGHT)
+	ctx.save()
+	ctx.translate((width - DESIGN_WIDTH * scale) / 2, (height - DESIGN_HEIGHT * scale) / 2)
+	ctx.scale(scale, scale)
+	PANEL_DESIGNS[template](ctx, buildPanel(project, day))
+	ctx.restore()
+}
+
+function drawClassic(ctx: CanvasRenderingContext2D, project: Project, day: Date): void {
+	const { width, height } = project.settings
 	const layout = computeLayout(width, height)
 	const accent = PALETTE[project.settings.accentColor]
 	const font = project.settings.fontFamily
 	const entries = entriesFor(project, day)
 	const highlighted = entries.some((entry) => entry.highlighted)
-
-	ctx.fillStyle = WHITE
-	ctx.fillRect(0, 0, width, height)
 
 	drawDayTile(ctx, layout, day, project, accent, highlighted)
 	const eventsBottom = drawEventList(ctx, layout, entries, font, accent)
@@ -70,7 +92,7 @@ function drawDayTile(
 		size: numberSize,
 		font: fontFamily,
 		color: WHITE,
-		bold: true,
+		weight: 700,
 		align: 'center',
 	})
 
@@ -84,7 +106,7 @@ function drawDayTile(
 		size: labelSize,
 		font: fontFamily,
 		color: highlighted ? WHITE : accent,
-		bold: true,
+		weight: 700,
 		align: 'right',
 	})
 	drawText(ctx, {
@@ -94,7 +116,7 @@ function drawDayTile(
 		size: labelSize,
 		font: fontFamily,
 		color: WHITE,
-		bold: true,
+		weight: 700,
 		align: 'left',
 	})
 }
@@ -131,7 +153,7 @@ function drawEventList(
 			size: fontSize * subFactor,
 			font,
 			color,
-			bold: true,
+			weight: 700,
 			maxWidth: width,
 		})
 	})
@@ -170,7 +192,7 @@ function drawChoreStrip(
 	ctx.fillRect(x, ruleY, width, Math.max(1, fontSize / 12))
 
 	// The names share a column, so the widest one sets where the jobs must stop.
-	ctx.font = fontSpec(fontSize, font, true)
+	ctx.font = fontSpec(fontSize, font, 700)
 	const nameColumn = Math.max(
 		...duties.slice(0, rows).map((duty) => (duty.person ? ctx.measureText(duty.person).width : 0)),
 	)
@@ -194,7 +216,7 @@ function drawChoreStrip(
 				size: fontSize,
 				font,
 				color: accent,
-				bold: true,
+				weight: 700,
 				align: 'right',
 			})
 		}
@@ -228,7 +250,7 @@ function drawMonthGrid(
 
 	// Headings shrink if the locale spells weekdays out (`Mon` vs `Mo`).
 	const headings = weekdayHeadings(locale, weekStartsOn)
-	const headingSize = fitFontSize(ctx, headings, fontFamily, fontSize, step * 0.92, true)
+	const headingSize = fitFontSize(ctx, headings, fontFamily, fontSize, step * 0.92, 700)
 	headings.forEach((heading, column) => {
 		drawText(ctx, {
 			text: heading,
@@ -237,7 +259,7 @@ function drawMonthGrid(
 			size: headingSize,
 			font: fontFamily,
 			color: INK,
-			bold: true,
+			weight: 700,
 			align: 'center',
 		})
 	})
@@ -268,93 +290,4 @@ function drawMonthGrid(
 			})
 		})
 	})
-}
-
-/** Weeks of a month as day numbers, 0 for cells outside the month. */
-export function weeksOf(year: number, monthIndex: number, weekStartsOn: 0 | 1): number[][] {
-	const firstWeekday = new Date(year, monthIndex, 1).getDay()
-	const leading = (firstWeekday - weekStartsOn + 7) % 7
-	const daysInMonth = new Date(year, monthIndex + 1, 0).getDate()
-
-	const cells: number[] = [...Array(leading).fill(0), ...range(1, daysInMonth)]
-	while (cells.length % 7 !== 0) cells.push(0)
-
-	const weeks: number[][] = []
-	for (let index = 0; index < cells.length; index += 7) {
-		weeks.push(cells.slice(index, index + 7))
-	}
-	return weeks
-}
-
-function range(from: number, to: number): number[] {
-	return Array.from({ length: to - from + 1 }, (_, index) => from + index)
-}
-
-interface TextOptions {
-	text: string
-	x: number
-	y: number
-	size: number
-	font: string
-	color: string
-	bold?: boolean
-	align?: CanvasTextAlign
-	/** Longer text is cut and ellipsised rather than running off the page. */
-	maxWidth?: number
-}
-
-function drawText(ctx: CanvasRenderingContext2D, options: TextOptions): void {
-	ctx.font = fontSpec(options.size, options.font, options.bold)
-	ctx.fillStyle = options.color
-	ctx.textAlign = options.align ?? 'left'
-	ctx.fillText(ellipsise(ctx, options.text, options.maxWidth), options.x, options.y)
-}
-
-function fontSpec(size: number, family: string, bold?: boolean): string {
-	return `${bold ? 'bold ' : ''}${size}px "${family}"`
-}
-
-function ellipsise(ctx: CanvasRenderingContext2D, text: string, maxWidth?: number): string {
-	if (!maxWidth || ctx.measureText(text).width <= maxWidth) return text
-	let truncated = text
-	while (truncated.length > 1 && ctx.measureText(`${truncated}…`).width > maxWidth) {
-		truncated = truncated.slice(0, -1)
-	}
-	return `${truncated}…`
-}
-
-/** The largest size at or below `size` that keeps every string inside `maxWidth`. */
-function fitFontSize(
-	ctx: CanvasRenderingContext2D,
-	texts: string[],
-	family: string,
-	size: number,
-	maxWidth: number,
-	bold: boolean,
-): number {
-	ctx.font = fontSpec(size, family, bold)
-	const widest = Math.max(...texts.map((text) => ctx.measureText(text).width))
-	if (widest <= maxWidth) return size
-	return Math.max(size * 0.5, (size * maxWidth) / widest)
-}
-
-function roundedRect(
-	ctx: CanvasRenderingContext2D,
-	x: number,
-	y: number,
-	width: number,
-	height: number,
-	radius: number,
-): void {
-	ctx.beginPath()
-	ctx.moveTo(x + radius, y)
-	ctx.lineTo(x + width - radius, y)
-	ctx.quadraticCurveTo(x + width, y, x + width, y + radius)
-	ctx.lineTo(x + width, y + height - radius)
-	ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height)
-	ctx.lineTo(x + radius, y + height)
-	ctx.quadraticCurveTo(x, y + height, x, y + height - radius)
-	ctx.lineTo(x, y + radius)
-	ctx.quadraticCurveTo(x, y, x + radius, y)
-	ctx.closePath()
 }

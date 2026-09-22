@@ -115,3 +115,13 @@ export function formatDayCount(tag: string, days: number): string {
 export function formatToday(tag: string): string {
 	return new Intl.RelativeTimeFormat(normaliseLocale(tag), { numeric: 'auto' }).format(0, 'day')
 }
+
+/** Full weekday name for the designs that spell it out, e.g. `Monday`. */
+export function weekdayLong(locale: string, date: Date): string {
+	return dateFormat(locale, { weekday: 'long' }).format(date)
+}
+
+/** Day and month as digits, e.g. `29.09.` / `29/09` — the ledger date column. */
+export function formatDayMonthNumeric(locale: string, date: Date): string {
+	return dateFormat(locale, { day: '2-digit', month: '2-digit' }).format(date)
+}
