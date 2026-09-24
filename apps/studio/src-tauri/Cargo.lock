@@ -944,6 +944,7 @@ dependencies = [
  "base64 0.22.1",
  "epaper-core",
  "image",
+ "rfd",
  "serde",
  "serde_json",
  "tauri",
