@@ -23,6 +23,11 @@ serde_json = "1"
 base64 = "0.22"
 image = { version = "0.25", default-features = false, features = ["png", "jpeg", "bmp", "gif", "webp"] }
 
+# Only for the WebView2 check, which runs before Tauri has a window to host a
+# dialog. Already in the tree through tauri-plugin-dialog.
+[target.'cfg(windows)'.dependencies]
+rfd = { version = "0.16", default-features = false }
+
 [profile.release]
 codegen-units = 1
 lto = true

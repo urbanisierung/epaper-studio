@@ -184,6 +184,20 @@
 		color: var(--cascivo-color-text-muted);
 	}
 
+	/* Plain markup, so it still shows when the component library is what broke. */
+	.epaper-crash {
+		max-inline-size: 38rem;
+		margin: var(--cascivo-space-12) auto;
+		padding-inline: var(--cascivo-space-6);
+	}
+
+	.epaper-crash pre {
+		font-family: var(--cascivo-font-mono);
+		font-size: var(--cascivo-font-size-xs);
+		white-space: pre-wrap;
+		user-select: text;
+	}
+
 	.epaper-truncate {
 		overflow: hidden;
 		text-overflow: ellipsis;
