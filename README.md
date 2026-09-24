@@ -22,6 +22,11 @@ x86_64 and Linux x86_64 are attached to every
 They are not code-signed yet, so macOS and Windows warn the first time one is
 opened. Building from source avoids the warning.
 
+The app draws its window with the system's own web engine, so it needs a recent
+one: **macOS 12 Monterey or later with Safari 17.4+**, or on Windows the
+**Microsoft Edge WebView2 Runtime 114+** (it updates itself unless updates are
+blocked). On anything older the app says so instead of starting.
+
 ## What is in here
 
 | Path | What it is |

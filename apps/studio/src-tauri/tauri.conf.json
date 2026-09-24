@@ -31,6 +31,9 @@
 		"shortDescription": "Calendar and photo generator for PhotoPainter e-paper displays",
 		"longDescription": "Design a daily calendar with birthdays and holidays, convert photos, and write both straight to your PhotoPainter SD card. No extra tools to install.",
 		"resources": ["resources/firmware/*"],
+		"macOS": {
+			"minimumSystemVersion": "12.0"
+		},
 		"icon": [
 			"icons/32x32.png",
 			"icons/128x128.png",

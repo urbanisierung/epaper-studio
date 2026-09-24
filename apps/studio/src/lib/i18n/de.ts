@@ -7,6 +7,9 @@ import type { MessageKey } from './en'
 export const de: Record<MessageKey, string> = {
 	'app.name': 'E-Paper Studio',
 	'app.loading': 'Lädt…',
+	'app.crashed': 'Etwas ist schiefgelaufen',
+	'app.crashedHint':
+		'Die App ist auf einen Fehler gestoßen, von dem sie sich nicht erholen kann. Starte sie neu; passiert das wieder, melde bitte die Meldung unten.',
 	'app.language': 'Sprache der App',
 	'app.theme': 'Darstellung',
 	'theme.system': 'Wie das System',

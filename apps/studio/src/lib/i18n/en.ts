@@ -11,6 +11,9 @@
 export const en = {
 	'app.name': 'E-Paper Studio',
 	'app.loading': 'Loading…',
+	'app.crashed': 'Something went wrong',
+	'app.crashedHint':
+		'The app hit an error it could not recover from. Restart it; if this keeps happening, please report the message below.',
 	'app.language': 'App language',
 	'app.theme': 'Theme',
 	'theme.system': 'Follow the system',
