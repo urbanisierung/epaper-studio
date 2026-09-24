@@ -5,8 +5,8 @@
 //! the same commands, plus the file pickers and "open" calls its plugins make.
 //!
 //! The server can read and write any file the user can, so it only answers on
-//! 127.0.0.1, only to requests addressed to it by that name (no DNS
-//! rebinding), and API calls only with the random token from the link. Other
+//! 127.0.0.1, only to requests addressed to it as 127.0.0.1 or localhost (no
+//! DNS rebinding), and API calls only with the random token from the link. Other
 //! sites open in the same browser never see the token, and a custom header
 //! keeps them from even sending a call without a CORS preflight, which this
 //! server never answers.
@@ -36,7 +36,7 @@ pub fn start(app: &AppHandle, engine: &str) -> Result<(), Box<dyn std::error::Er
         .ok_or("the server has no TCP address")?
         .port();
     let guard = Guard::new(port, new_token().map_err(|error| error.to_string())?);
-    let url = format!("{}/?token={}", guard.origin, guard.token);
+    let url = format!("http://127.0.0.1:{port}/?token={}", guard.token);
 
     let handle = app.clone();
     thread::spawn(move || {
@@ -65,30 +65,30 @@ fn new_token() -> Result<String, getrandom::Error> {
 
 #[derive(Clone)]
 struct Guard {
-    host: String,
-    origin: String,
+    /// `localhost` as well as the address in the link: browsers never ask DNS
+    /// for it, so it cannot be rebound to another site either.
+    hosts: [String; 2],
     token: String,
 }
 
 impl Guard {
     fn new(port: u16, token: String) -> Self {
-        let host = format!("127.0.0.1:{port}");
         Guard {
-            origin: format!("http://{host}"),
-            host,
+            hosts: [format!("127.0.0.1:{port}"), format!("localhost:{port}")],
             token,
         }
     }
 
     fn allows_host(&self, host: Option<&str>) -> bool {
-        host == Some(self.host.as_str())
+        host.is_some_and(|host| self.hosts.iter().any(|allowed| allowed == host))
     }
 
     /// Browsers always send `Origin` on a cross-site call, so one that is
     /// missing can only come from outside a browser — which still needs the token.
     fn allows_call(&self, origin: Option<&str>, token: Option<&str>) -> bool {
-        origin.map_or(true, |origin| origin == self.origin)
-            && token.is_some_and(|token| same(token.as_bytes(), self.token.as_bytes()))
+        origin.map_or(true, |origin| {
+            self.allows_host(origin.strip_prefix("http://"))
+        }) && token.is_some_and(|token| same(token.as_bytes(), self.token.as_bytes()))
     }
 }
 
@@ -131,7 +131,60 @@ fn respond(app: &AppHandle, guard: &Guard, mut request: Request) {
     let _ = request.respond(response);
 }
 
+/// `tauri dev` embeds no UI: the window loads it from the Vite dev server, and
+/// so does the browser, through here.
+#[cfg(dev)]
 fn asset(app: &AppHandle, url: &str) -> Response<std::io::Cursor<Vec<u8>>> {
+    match &app.config().build.dev_url {
+        Some(dev_url) => from_dev_server(dev_url, url)
+            .unwrap_or_else(|error| text(502, format!("{dev_url} did not answer: {error}"))),
+        None => embedded(app, url),
+    }
+}
+
+#[cfg(not(dev))]
+fn asset(app: &AppHandle, url: &str) -> Response<std::io::Cursor<Vec<u8>>> {
+    embedded(app, url)
+}
+
+/// HTTP/1.0, so the dev server answers with the plain body and closes.
+#[cfg(dev)]
+fn from_dev_server(
+    dev_url: &tauri::Url,
+    url: &str,
+) -> std::io::Result<Response<std::io::Cursor<Vec<u8>>>> {
+    use std::io::{Error, Read, Write};
+
+    let host = dev_url.host_str().unwrap_or("localhost");
+    let port = dev_url.port_or_known_default().unwrap_or(80);
+    let mut stream = std::net::TcpStream::connect((host, port))?;
+    write!(stream, "GET {url} HTTP/1.0\r\nHost: {host}:{port}\r\n\r\n")?;
+    let mut raw = Vec::new();
+    stream.read_to_end(&mut raw)?;
+
+    let end = raw
+        .windows(4)
+        .position(|window| window == b"\r\n\r\n")
+        .ok_or_else(|| Error::other("the response has no end of headers"))?;
+    let head = String::from_utf8_lossy(&raw[..end]).into_owned();
+    let mut lines = head.lines();
+    let status = lines
+        .next()
+        .and_then(|line| line.split(' ').nth(1))
+        .and_then(|code| code.parse().ok())
+        .unwrap_or(502);
+    let mut response = Response::from_data(raw[end + 4..].to_vec()).with_status_code(status);
+    for (name, value) in lines.filter_map(|line| line.split_once(':')) {
+        if name.eq_ignore_ascii_case("content-type") {
+            if let Ok(header) = Header::from_bytes("Content-Type", value.trim()) {
+                response.add_header(header);
+            }
+        }
+    }
+    Ok(response)
+}
+
+fn embedded(app: &AppHandle, url: &str) -> Response<std::io::Cursor<Vec<u8>>> {
     let path = url.split(['?', '#']).next().unwrap_or("/");
     match app.asset_resolver().get(path.to_string()) {
         None => text(404, format!("{path} not found")),
@@ -373,9 +426,10 @@ mod tests {
     }
 
     #[test]
-    fn only_requests_addressed_to_127_0_0_1_are_served() {
+    fn only_requests_addressed_to_this_computer_are_served() {
         assert!(guard().allows_host(Some("127.0.0.1:4321")));
-        assert!(!guard().allows_host(Some("localhost:4321")));
+        assert!(guard().allows_host(Some("localhost:4321")));
+        assert!(!guard().allows_host(Some("localhost:9999")));
         assert!(!guard().allows_host(Some("attacker.example:4321")));
         assert!(!guard().allows_host(None));
     }
@@ -383,6 +437,7 @@ mod tests {
     #[test]
     fn calls_need_the_token() {
         assert!(guard().allows_call(Some("http://127.0.0.1:4321"), Some("secret")));
+        assert!(guard().allows_call(Some("http://localhost:4321"), Some("secret")));
         assert!(guard().allows_call(None, Some("secret")));
         assert!(!guard().allows_call(Some("http://127.0.0.1:4321"), Some("secreT")));
         assert!(!guard().allows_call(Some("http://127.0.0.1:4321"), Some("secret!")));
@@ -393,6 +448,7 @@ mod tests {
     fn calls_from_other_sites_are_refused_even_with_the_token() {
         assert!(!guard().allows_call(Some("https://attacker.example"), Some("secret")));
         assert!(!guard().allows_call(Some("http://127.0.0.1:9999"), Some("secret")));
+        assert!(!guard().allows_call(Some("https://localhost:4321"), Some("secret")));
     }
 
     #[test]
