@@ -32,6 +32,8 @@ export class CrashScreen extends Component<Props, State> {
 				<h1>{translate(language, 'app.crashed')}</h1>
 				<p>{translate(language, 'app.crashedHint')}</p>
 				<pre>{detail}</pre>
+				{/* On Windows this carries the WebView2 version as `Edg/…`. */}
+				<pre>{translate(language, 'app.crashedEngine', { engine: navigator.userAgent })}</pre>
 			</main>
 		)
 	}
