@@ -1,8 +1,8 @@
 import { Cpu, HardDrive } from '@cascivo/icons'
 import { Alert, Button, EmptyState, Flex, Steps } from '@cascivo/react'
-import { open } from '@tauri-apps/plugin-dialog'
 import { useEffect, useState } from 'react'
 import { useT } from '../../lib/i18n/useT'
+import { open } from '../../lib/io/host'
 import { copyFirmware, type FirmwareImage, listFirmware } from '../../lib/io/tauri'
 import { Section } from '../ui/controls'
 

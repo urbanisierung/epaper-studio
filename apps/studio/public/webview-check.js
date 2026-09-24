@@ -25,6 +25,9 @@
 				windows:
 					'Windows: „Microsoft Edge WebView2 Runtime“ in Version 114 oder neuer (unter Apps und Features aktualisieren oder bei Microsoft neu installieren).',
 				engine: 'Erkannter Browser-Baustein:',
+				browserTitle: 'Dieser Browser ist zu alt für E-Paper Studio',
+				browserBody:
+					'Öffne den Link aus dem Fenster von E-Paper Studio in einem neueren Browser: Safari 17.4, Chrome oder Edge 114, Firefox 125 oder neuer.',
 			}
 		: {
 				title: 'This computer is too old for E-Paper Studio',
@@ -33,6 +36,9 @@
 				windows:
 					'Windows: "Microsoft Edge WebView2 Runtime" version 114 or later (update it under Apps & features, or reinstall it from Microsoft).',
 				engine: 'Detected web engine:',
+				browserTitle: 'This browser is too old for E-Paper Studio',
+				browserBody:
+					'Open the link from the E-Paper Studio window in a newer browser: Safari 17.4, Chrome or Edge 114, Firefox 125 or later.',
 			}
 
 	const message = document.createElement('main')
@@ -44,10 +50,17 @@
 		if (style) element.style.cssText = style
 		message.appendChild(element)
 	}
-	add('h1', text.title, 'font-size: 1.4rem; margin: 0 0 1rem;')
-	add('p', text.body)
-	add('p', text.mac)
-	add('p', text.windows)
+	// Outside the app window this is browser mode (`src-tauri/src/browser.rs`),
+	// where the fix is another browser, not another system.
+	if ('__TAURI_INTERNALS__' in window) {
+		add('h1', text.title, 'font-size: 1.4rem; margin: 0 0 1rem;')
+		add('p', text.body)
+		add('p', text.mac)
+		add('p', text.windows)
+	} else {
+		add('h1', text.browserTitle, 'font-size: 1.4rem; margin: 0 0 1rem;')
+		add('p', text.browserBody)
+	}
 	add('p', `${text.engine} ${navigator.userAgent}`, 'font-size: 12px; color: #555;')
 
 	// Without `#root` the bundle has nothing to mount into, so it never renders.

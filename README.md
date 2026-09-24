@@ -27,7 +27,14 @@ one: **macOS 14.4 Sonoma or later**, or on Windows the **Microsoft Edge
 WebView2 Runtime 114+** (it updates itself unless updates are blocked). On macOS
 a newer Safari does not help: its engine is for Safari alone, and apps keep the
 one that came with the system, so Monterey with Safari 17.6 still gives apps
-Safari 15's. On anything older the app says so instead of starting.
+Safari 15's.
+
+Where the engine is too old, the app runs in a browser instead: its window
+shows a link to a server it starts on this computer, to open in Safari 17.4,
+Chrome or Edge 114, Firefox 125 or later. Everything works as in the window —
+file pickers included — as long as that window stays open. The link carries a
+random token and only answers on `127.0.0.1`. To try it on a current machine,
+start the app with `EPAPER_STUDIO_BROWSER_MODE=1` set.
 
 ## What is in here
 

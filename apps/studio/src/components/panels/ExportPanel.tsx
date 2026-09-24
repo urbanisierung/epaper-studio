@@ -11,8 +11,6 @@ import {
 	Text,
 	Toggle,
 } from '@cascivo/react'
-import { open } from '@tauri-apps/plugin-dialog'
-import { openPath } from '@tauri-apps/plugin-opener'
 import { useState } from 'react'
 import {
 	type ExportProgress,
@@ -22,6 +20,7 @@ import {
 	RECOMMENDED_MAX_PICTURES,
 } from '../../lib/export'
 import { useT } from '../../lib/i18n/useT'
+import { open, openPath } from '../../lib/io/host'
 import { buildSchedule } from '../../lib/render/schedule'
 import { useStudio } from '../../lib/state/store'
 import { Section } from '../ui/controls'

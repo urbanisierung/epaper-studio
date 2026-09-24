@@ -1,13 +1,17 @@
 //! The UI renders with the system's own web engine — WebView2 on Windows,
-//! WebKit on macOS — which can be older than the UI needs. The UI explains that
-//! itself when it can load at all; this catches it earlier, before any window
-//! opens, with a native message box that needs no webview. On macOS it is also
-//! the only place that can name the version: WebKit's user agent is frozen.
+//! WebKit on macOS — which can be older than the UI needs. When it is, the app
+//! serves the UI to a browser instead (see `browser`). This decides that before
+//! any window opens; on macOS it is also the only place that can tell, because
+//! WebKit's user agent is frozen.
 //!
 //! On macOS the version that counts is not Safari's. A Safari update on an older
 //! macOS stages its newer WebKit for Safari alone; every other app keeps the
 //! WebKit that came with the system. Monterey with Safari 17.6 still gives apps
 //! Safari 15's engine, so this reads the WebKit loaded into this process.
+
+/// Set to anything to use browser mode on a system whose webview is fine — the
+/// only way to try it on a current machine.
+const FORCE_BROWSER_MODE: &str = "EPAPER_STUDIO_BROWSER_MODE";
 
 /// cascivo's floor: the Popover API it relies on arrived in Chromium 114.
 #[cfg(any(windows, test))]
@@ -18,59 +22,32 @@ const MIN_WEBVIEW2_MAJOR: u32 = 114;
 #[cfg(any(target_os = "macos", test))]
 const MIN_WEBKIT_BUILD: u32 = 618;
 
-/// Shows an error and exits if WebView2 is too old to run the UI.
-#[cfg(windows)]
-pub fn exit_if_unsupported() {
-    // An unreadable version is left to Tauri, which reports a missing runtime
-    // itself; refusing to start on a detection hiccup would be worse.
-    let Ok(version) = tauri::webview_version() else {
-        return;
-    };
-    if !too_old(&version) {
-        return;
+/// The webview's version when it is too old to run the UI, `None` when the app
+/// window can show it.
+pub fn unsupported() -> Option<String> {
+    if std::env::var_os(FORCE_BROWSER_MODE).is_some() {
+        return Some(format!("{FORCE_BROWSER_MODE} is set"));
     }
-    rfd::MessageDialog::new()
-        .set_level(rfd::MessageLevel::Error)
-        .set_title("E-Paper Studio")
-        .set_description(format!(
-            "E-Paper Studio needs Microsoft Edge WebView2 Runtime {MIN_WEBVIEW2_MAJOR} or later, \
-             but this computer has {version}. Update it under Settings → Apps, or install the \
-             current version from Microsoft, then start the app again.\n\n\
-             E-Paper Studio braucht Microsoft Edge WebView2 Runtime {MIN_WEBVIEW2_MAJOR} oder neuer, \
-             auf diesem Computer ist {version} installiert. Aktualisiere sie unter Einstellungen → \
-             Apps oder installiere die aktuelle Version von Microsoft, dann starte die App neu."
-        ))
-        .show();
-    std::process::exit(1);
+    // An unreadable version does not block the app: refusing to start on a
+    // detection hiccup would be worse, and Tauri reports a missing runtime itself.
+    let version = tauri::webview_version().ok()?;
+    engine_too_old(&version).then_some(version)
 }
 
-/// Shows an error and exits if the system WebKit is too old to run the UI.
+#[cfg(windows)]
+fn engine_too_old(version: &str) -> bool {
+    too_old(version)
+}
+
 #[cfg(target_os = "macos")]
-pub fn exit_if_unsupported() {
-    // As on Windows: a version that cannot be read does not block the app.
-    let Ok(version) = tauri::webview_version() else {
-        return;
-    };
-    if !webkit_too_old(&version) {
-        return;
-    }
-    rfd::MessageDialog::new()
-        .set_level(rfd::MessageLevel::Error)
-        .set_title("E-Paper Studio")
-        .set_description(format!(
-            "E-Paper Studio needs macOS 14.4 Sonoma or later. Apps draw with the web engine \
-             that comes with macOS, and the one on this Mac is too old (WebKit {version}). \
-             Installing a newer Safari does not change it — only Safari itself uses that. \
-             Update macOS under System Settings → General → Software Update, if this Mac \
-             supports it.\n\n\
-             E-Paper Studio braucht macOS 14.4 Sonoma oder neuer. Apps zeichnen mit dem \
-             Browser-Baustein, der mit macOS kommt, und der ist auf diesem Mac zu alt \
-             (WebKit {version}). Ein neueres Safari ändert daran nichts — das nutzt nur Safari \
-             selbst. Aktualisiere macOS unter Systemeinstellungen → Allgemein → Softwareupdate, \
-             falls dieser Mac das unterstützt."
-        ))
-        .show();
-    std::process::exit(1);
+fn engine_too_old(version: &str) -> bool {
+    webkit_too_old(version)
+}
+
+/// Linux is not checked: WebKitGTK arrives with the distribution's own updates.
+#[cfg(not(any(windows, target_os = "macos")))]
+fn engine_too_old(_version: &str) -> bool {
+    false
 }
 
 #[cfg(any(windows, test))]
