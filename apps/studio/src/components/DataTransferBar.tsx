@@ -1,6 +1,5 @@
 import { Download, Upload } from '@cascivo/icons'
 import { Button, Dropdown, Flex, Modal, Text } from '@cascivo/react'
-import { open, save } from '@tauri-apps/plugin-dialog'
 import { useState } from 'react'
 import type { Translate } from '../lib/i18n'
 import { useT } from '../lib/i18n/useT'
@@ -13,6 +12,7 @@ import {
 	toCombinedJson,
 } from '../lib/io/calendarData'
 import { birthdaysToCsv, eventsToCsv } from '../lib/io/csv'
+import { open, save } from '../lib/io/host'
 import { readTextFile, writeTextFile } from '../lib/io/tauri'
 import { useStudio } from '../lib/state/store'
 

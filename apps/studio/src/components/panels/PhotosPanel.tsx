@@ -9,9 +9,9 @@ import {
 	Text,
 	Toggle,
 } from '@cascivo/react'
-import { open } from '@tauri-apps/plugin-dialog'
 import { useEffect, useState } from 'react'
 import { useT } from '../../lib/i18n/useT'
+import { open } from '../../lib/io/host'
 import { previewPhoto } from '../../lib/io/tauri'
 import { useStudio } from '../../lib/state/store'
 import type { Photo } from '../../lib/types'

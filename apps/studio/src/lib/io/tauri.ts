@@ -1,5 +1,5 @@
-import { invoke } from '@tauri-apps/api/core'
 import type { Fit } from '../types'
+import { invoke } from './host'
 
 export interface ImageOptions {
 	width: number

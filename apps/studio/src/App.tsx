@@ -24,7 +24,6 @@ import {
 	ShellHeader,
 	SideNav,
 } from '@cascivo/react'
-import { open, save } from '@tauri-apps/plugin-dialog'
 import { useEffect, useState } from 'react'
 import { AuthorCredit } from './components/AuthorCredit'
 import { DataTransferBar } from './components/DataTransferBar'
@@ -38,6 +37,7 @@ import { PhotosPanel } from './components/panels/PhotosPanel'
 import { SetupPanel } from './components/panels/SetupPanel'
 import { LANGUAGES, type MessageKey } from './lib/i18n'
 import { useT } from './lib/i18n/useT'
+import { open, save } from './lib/io/host'
 import { parseProject, serialiseProject } from './lib/io/project'
 import { readTextFile, writeTextFile } from './lib/io/tauri'
 import { startAutosave, useStudio } from './lib/state/store'

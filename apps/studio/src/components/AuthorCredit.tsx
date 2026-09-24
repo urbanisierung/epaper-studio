@@ -1,7 +1,7 @@
 import { Link } from '@cascivo/react'
-import { openUrl } from '@tauri-apps/plugin-opener'
 import type { MouseEvent } from 'react'
 import { useT } from '../lib/i18n/useT'
+import { openUrl } from '../lib/io/host'
 
 export const AUTHOR_NAME = 'u11g.com'
 export const AUTHOR_URL = 'https://u11g.com'

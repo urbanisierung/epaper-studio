@@ -1,14 +1,26 @@
+mod browser;
 mod commands;
 mod webview;
 
+use tauri::WebviewWindowBuilder;
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    #[cfg(windows)]
-    webview::exit_if_unsupported();
-
     tauri::Builder::default()
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_opener::init())
+        // The window is not created from the config, so a webview too old for
+        // the UI never has to load it.
+        .setup(|app| {
+            match webview::unsupported() {
+                Some(engine) => browser::start(app.handle(), &engine)?,
+                None => {
+                    WebviewWindowBuilder::from_config(app.handle(), &app.config().app.windows[0])?
+                        .build()?;
+                }
+            }
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             commands::prepare_output,
             commands::save_page,
