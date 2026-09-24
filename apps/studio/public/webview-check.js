@@ -21,7 +21,7 @@
 		? {
 				title: 'Dieser Computer ist zu alt für E-Paper Studio',
 				body: 'Die App zeichnet ihre Oberfläche mit dem Browser-Baustein des Systems, und der ist hier zu alt.',
-				mac: 'macOS: 12 Monterey oder neuer, mit Safari 17.4 oder neuer (Systemeinstellungen → Softwareupdate).',
+				mac: 'macOS: 12 Monterey oder neuer, mit Safari 17.4 oder neuer. Safari wird getrennt von macOS aktualisiert: unter Systemeinstellungen → Softwareupdate auf „Weitere Infos …“ klicken und das Safari-Update installieren. Welche Version da ist, zeigt Safari → Über Safari.',
 				windows:
 					'Windows: „Microsoft Edge WebView2 Runtime“ in Version 114 oder neuer (unter Apps und Features aktualisieren oder bei Microsoft neu installieren).',
 				engine: 'Erkannter Browser-Baustein:',
@@ -29,7 +29,7 @@
 		: {
 				title: 'This computer is too old for E-Paper Studio',
 				body: "The app draws its window with the system's built-in web engine, and the one here is too old.",
-				mac: 'macOS: 12 Monterey or later, with Safari 17.4 or later (System Preferences → Software Update).',
+				mac: 'macOS: 12 Monterey or later, with Safari 17.4 or later. Safari updates separately from macOS: in System Preferences → Software Update, click "More info…" and install the Safari update. Safari → About Safari shows which version is installed.',
 				windows:
 					'Windows: "Microsoft Edge WebView2 Runtime" version 114 or later (update it under Apps & features, or reinstall it from Microsoft).',
 				engine: 'Detected web engine:',

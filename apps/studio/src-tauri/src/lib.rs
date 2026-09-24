@@ -3,7 +3,7 @@ mod webview;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
-    #[cfg(windows)]
+    #[cfg(any(windows, target_os = "macos"))]
     webview::exit_if_unsupported();
 
     tauri::Builder::default()
