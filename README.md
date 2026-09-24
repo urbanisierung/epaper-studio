@@ -23,11 +23,11 @@ They are not code-signed yet, so macOS and Windows warn the first time one is
 opened. Building from source avoids the warning.
 
 The app draws its window with the system's own web engine, so it needs a recent
-one: **macOS 12 Monterey or later with Safari 17.4+**, or on Windows the
-**Microsoft Edge WebView2 Runtime 114+** (it updates itself unless updates are
-blocked). Safari updates separately from macOS, so an up-to-date Monterey can
-still have an old Safari — install it under Software Update → More info…. On
-anything older the app says so instead of starting.
+one: **macOS 14.4 Sonoma or later**, or on Windows the **Microsoft Edge
+WebView2 Runtime 114+** (it updates itself unless updates are blocked). On macOS
+a newer Safari does not help: its engine is for Safari alone, and apps keep the
+one that came with the system, so Monterey with Safari 17.6 still gives apps
+Safari 15's. On anything older the app says so instead of starting.
 
 ## What is in here
 

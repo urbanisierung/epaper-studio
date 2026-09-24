@@ -2,14 +2,19 @@
 //! WebKit on macOS — which can be older than the UI needs. The UI explains that
 //! itself when it can load at all; this catches it earlier, before any window
 //! opens, with a native message box that needs no webview. On macOS it is also
-//! the only place that can name the version: WebKit's user agent is frozen and
-//! says nothing about which Safari is installed.
+//! the only place that can name the version: WebKit's user agent is frozen.
+//!
+//! On macOS the version that counts is not Safari's. A Safari update on an older
+//! macOS stages its newer WebKit for Safari alone; every other app keeps the
+//! WebKit that came with the system. Monterey with Safari 17.6 still gives apps
+//! Safari 15's engine, so this reads the WebKit loaded into this process.
 
 /// cascivo's floor: the Popover API it relies on arrived in Chromium 114.
 #[cfg(any(windows, test))]
 const MIN_WEBVIEW2_MAJOR: u32 = 114;
 
-/// cascivo's floor on macOS, Safari 17.4, shipped WebKit 618.
+/// cascivo's floor on macOS, Safari 17.4, shipped WebKit 618 — as the system's
+/// own WebKit from macOS 14.4 Sonoma on.
 #[cfg(any(target_os = "macos", test))]
 const MIN_WEBKIT_BUILD: u32 = 618;
 
@@ -49,21 +54,20 @@ pub fn exit_if_unsupported() {
     if !webkit_too_old(&version) {
         return;
     }
-    // Safari updates are listed apart from macOS updates, so "macOS is up to
-    // date" can still leave an old Safari — and with it an old WebKit — behind.
     rfd::MessageDialog::new()
         .set_level(rfd::MessageLevel::Error)
         .set_title("E-Paper Studio")
         .set_description(format!(
-            "E-Paper Studio needs Safari 17.4 or later, but the Safari engine on this Mac is \
-             older (WebKit {version}). Safari updates separately from macOS: open System \
-             Preferences → Software Update, click \"More info…\", install the Safari update, \
-             then start the app again. Safari → About Safari shows the installed version.\n\n\
-             E-Paper Studio braucht Safari 17.4 oder neuer, der Safari-Baustein auf diesem Mac \
-             ist älter (WebKit {version}). Safari wird getrennt von macOS aktualisiert: Öffne \
-             Systemeinstellungen → Softwareupdate, klicke auf „Weitere Infos …“, installiere das \
-             Safari-Update und starte die App dann neu. Safari → Über Safari zeigt die \
-             installierte Version."
+            "E-Paper Studio needs macOS 14.4 Sonoma or later. Apps draw with the web engine \
+             that comes with macOS, and the one on this Mac is too old (WebKit {version}). \
+             Installing a newer Safari does not change it — only Safari itself uses that. \
+             Update macOS under System Settings → General → Software Update, if this Mac \
+             supports it.\n\n\
+             E-Paper Studio braucht macOS 14.4 Sonoma oder neuer. Apps zeichnen mit dem \
+             Browser-Baustein, der mit macOS kommt, und der ist auf diesem Mac zu alt \
+             (WebKit {version}). Ein neueres Safari ändert daran nichts — das nutzt nur Safari \
+             selbst. Aktualisiere macOS unter Systemeinstellungen → Allgemein → Softwareupdate, \
+             falls dieser Mac das unterstützt."
         ))
         .show();
     std::process::exit(1);
@@ -114,7 +118,7 @@ mod tests {
 
     #[test]
     fn webkit_below_safari_17_4_is_too_old() {
-        // Monterey as installed (Safari 15), and with Safari 16.6 or 17.3.
+        // WebKit 612, 615 and 617: Safari 15, 16.6 and 17.3.
         assert!(webkit_too_old("17612.1.29.41.4"));
         assert!(webkit_too_old("17615.3.12.11.3"));
         assert!(webkit_too_old("17617.2.4.11.12"));
@@ -122,7 +126,7 @@ mod tests {
 
     #[test]
     fn webkit_from_safari_17_4_on_is_fine() {
-        // Monterey with Safari 17.6, Sonoma, Sequoia, Tahoe.
+        // WebKit 618 (Safari 17.4–17.6) and later.
         assert!(!webkit_too_old("17618.3.11.11.7"));
         assert!(!webkit_too_old("19618.1.15.11.14"));
         assert!(!webkit_too_old("20619.1.26.31.6"));
